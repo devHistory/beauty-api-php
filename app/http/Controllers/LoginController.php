@@ -8,6 +8,8 @@ use App\Http\Models\AccountsModel;
 use Zend\Validator\Uuid;
 use Zend\Validator\EmailAddress;
 use Zend\Validator\Regex;
+use Xxtime\Oauth\OauthAdaptor;
+use Exception;
 
 class LoginController extends ControllerBase
 {
@@ -146,6 +148,7 @@ class LoginController extends ControllerBase
 
     /**
      * id
+     * token
      */
     public function platformAction()
     {
@@ -156,19 +159,41 @@ class LoginController extends ControllerBase
                 'message' => 'invalid argv id'
             ]);
         }
-        $uuid = $this->data['id'] . '#' . $type;
+        if (empty($this->data['token'])) {
+            return $this->response->setJsonContent([
+                'code'    => 400,
+                'message' => 'invalid argv token'
+            ]);
+        }
+        if (empty($this->di['config']['oauth'][$type])) {
+            return $this->response->setJsonContent([
+                'code'    => 400,
+                'message' => 'invalid argv platform'
+            ]);
+        }
 
 
-        // TODO :: check
+        // verify
+        try {
+            $oauth = new OauthAdaptor($type, (array)$this->di['config']['oauth'][$type]);
+            $response = $oauth->verify($this->data['id'], $this->data['token']);
+        } catch (Exception $e) {
+            return $this->response->setJsonContent([
+                'code'    => 400,
+                'message' => $e->getMessage()
+            ]);
+        }
 
 
         // login
+        $uuid = $response['id'] . '#' . $type;
         if (!($account = $this->accountModel->getAccountByUuid($uuid))) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'failed'
             ]);
         }
+
 
         // output
         $payload = [

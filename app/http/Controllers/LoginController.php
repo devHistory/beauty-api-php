@@ -41,6 +41,7 @@ class LoginController extends ControllerBase
             ]);
         }
 
+
         // validator
         $validatorEmail = new EmailAddress();
         $validatorMobile = new Regex(['pattern' => "/^\861[345789]{1}\d{9}$/"]);
@@ -51,24 +52,49 @@ class LoginController extends ControllerBase
             ]);
         }
 
-        // RPC
-        $result = $this->rpc->account('/login', [
-            'account'  => $this->data['account'],
-            'password' => $this->data['password'],
-        ]);
 
-        if ($result->code != 200) {
-            return $this->response->setJsonContent([
-                'code'    => $result->code,
-                'message' => $result->message
+        // if use RPC or Local
+        if ($this->di['config']['rpc']['account']) {
+            // RPC Account System
+            $result = $this->rpc->account('/login', [
+                'account'  => $this->data['account'],
+                'password' => $this->data['password'],
             ]);
+            if ($result->code != 200) {
+                return $this->response->setJsonContent([
+                    'code'    => $result->code,
+                    'message' => $result->message
+                ]);
+            }
+            if (!($account = $this->accountModel->getAccountByUuid($result->payload->uid))) {
+                return $this->response->setJsonContent([
+                    'code'    => 400,
+                    'message' => 'failed'
+                ]);
+            }
         }
+        else {
+            // Local Account System
+            if (!($account = $this->accountModel->getAccount($this->data['account']))) {
+                return $this->response->setJsonContent([
+                    'code'    => 400,
+                    'message' => 'no account'
+                ]);
+            }
+            if (empty($account->password) || !password_verify($this->data['password'], $account->password)) {
+                return $this->response->setJsonContent([
+                    'code'    => 400,
+                    'message' => 'error password',
+                ]);
+            }
+        }
+
 
         // output
         $payload = [
-            'uid'        => $result->payload->uid,
-            'account'    => $result->payload->account,
-            'createTime' => $result->payload->createTime,
+            'uid'        => $account['_id'],
+            'account'    => $account['account'],
+            'createTime' => $account['createTime'],
         ];
         return $this->response->setJsonContent([
             'code'    => 200,

@@ -29,9 +29,9 @@ class AccountsModel extends Model
             $basic = [
                 '_id'        => $id->__toString(),
                 'account'    => $account,
-                'password'   => empty($password) ? '' : password_hash($password, PASSWORD_DEFAULT),
                 'createTime' => time(),
             ];
+            empty($password) ? null : $basic['password'] = password_hash($password, PASSWORD_DEFAULT);
             $mongodb->$db->accounts->insertOne($basic + $options);
         } catch (Exception $e) {
             return false;

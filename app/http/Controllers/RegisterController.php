@@ -51,20 +51,24 @@ class RegisterController extends ControllerBase
             ]);
         }
 
-        // create
-        $account = $this->accountModel->createAccount($this->data['account'], $this->data['password']);
-        if (!$account) {
+        // RPC
+        $result = $this->rpc->account('/register', [
+            'account'  => $this->data['account'],
+            'password' => $this->data['password'],
+        ]);
+
+        if ($result->code != 200) {
             return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'failed, account is already exist'
+                'code'    => $result->code,
+                'message' => $result->message
             ]);
         }
 
         // output
         $payload = [
-            'uid'        => $account['_id'],
-            'account'    => $account['account'],
-            'createTime' => $account['createTime'],
+            'uid'        => $result->payload->uid,
+            'account'    => $result->payload->account,
+            'createTime' => $result->payload->createTime,
         ];
         return $this->response->setJsonContent([
             'code'    => 200,

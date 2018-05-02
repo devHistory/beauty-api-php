@@ -51,27 +51,24 @@ class LoginController extends ControllerBase
             ]);
         }
 
-        // get
-        if (!($account = $this->accountModel->getAccount($this->data['account']))) {
-            return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'no account'
-            ]);
-        }
+        // RPC
+        $result = $this->rpc->account('/login', [
+            'account'  => $this->data['account'],
+            'password' => $this->data['password'],
+        ]);
 
-        // verify
-        if (!password_verify($this->data['password'], $account->password)) {
+        if ($result->code != 200) {
             return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'error password'
+                'code'    => $result->code,
+                'message' => $result->message
             ]);
         }
 
         // output
         $payload = [
-            'uid'        => $account['_id'],
-            'account'    => $account['account'],
-            'createTime' => $account['createTime'],
+            'uid'        => $result->payload->uid,
+            'account'    => $result->payload->account,
+            'createTime' => $result->payload->createTime,
         ];
         return $this->response->setJsonContent([
             'code'    => 200,

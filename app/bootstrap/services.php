@@ -13,6 +13,7 @@ use Phalcon\DI\FactoryDefault,
     Phalcon\Cache\Backend\File as FileCache,
     Phalcon\Cache\Backend\Redis as RedisCache,
     App\Providers\Components\Locale,
+    App\Providers\Components\Rpc,
     Symfony\Component\Yaml\Yaml as SymfonyYaml,
     MongoDB\Client as MongoDBClient;
 
@@ -38,6 +39,11 @@ $di->set('config', function () {
 
 $di->set('locale', function () {
     return new Locale();
+}, true);
+
+
+$di->set('rpc', function () {
+    return new Rpc();
 }, true);
 
 

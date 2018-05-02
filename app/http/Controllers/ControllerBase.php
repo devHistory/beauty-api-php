@@ -25,27 +25,39 @@ class ControllerBase extends Controller
 
     public function initialize()
     {
-        // check argv
+        // check secret key
         $key = $this->session->get('key');
+        if (!$key) {
+            $output = [
+                'code'    => 400,
+                'message' => 'failure, missing secret key'
+            ];
+            $this->response->setJsonContent($output)->send();
+            exit();
+        }
+
+        // check argv
         $iv = base64_decode($this->request->getHeader('Xt-Iv'));
         $raw = base64_decode($this->request->getRawBody());
-        if (!$iv || !$raw || !$key) {
-            $output = json_encode([
+        if (!$iv || !$raw) {
+            $output = [
                 'code'    => 400,
                 'message' => 'failure, missing argv'
-            ]);
-            exit($output);
+            ];
+            $this->response->setJsonContent($output)->send();
+            exit();
         }
 
         // decrypt
         try {
             $decrypt = $this->decrypt($key, $iv, $raw);
         } catch (Exception $e) {
-            $output = json_encode([
+            $output = [
                 'code'    => 400,
                 'message' => 'failure, decrypt error'
-            ]);
-            exit($output);
+            ];
+            $this->response->setJsonContent($output)->send();
+            exit();
         }
         parse_str($decrypt, $this->data);
     }

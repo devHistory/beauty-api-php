@@ -32,11 +32,12 @@ class ApplicationListener
         // check time
         $timestamp = $app->request->getHeader('Xt-Timestamp');
         if (!$timestamp || abs(time() - $timestamp) > 300) {
-            $output = json_encode([
+            $output = [
                 'code'    => 400,
                 'message' => 'failure, timeout'
-            ]);
-            exit($output);
+            ];
+            $app->response->setJsonContent($output)->send();
+            exit();
         }
     }
 

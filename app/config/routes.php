@@ -19,8 +19,8 @@ $router->add('/keys/public', ['controller' => 'keys', 'action' => 'public']);
 $router->add('/keys/secrets', ['controller' => 'keys', 'action' => 'secrets']);
 $router->add('/login/([a-z]{2,10})', ['controller' => 'login', 'action' => 'platform', 'type' => 1]);
 $router->add('/login/device', ['controller' => 'login', 'action' => 'device']);
-$router->add('/login', ['controller' => 'login', 'action' => 'account']);
-$router->add('/register', ['controller' => 'register', 'action' => 'account']);
+$router->add('/login', ['controller' => 'login', 'action' => 'login']);
+$router->add('/register', ['controller' => 'login', 'action' => 'register']);
 
 $router->setDefaultModule('v1');
 $router->setDefaultNamespace('App\Http\Controllers');

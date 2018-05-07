@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Models\AccountsModel;
+use App\Http\Models\Accounts;
 use App\Http\Models\Relation;
 
 class RelationController extends ControllerBase
@@ -19,7 +19,7 @@ class RelationController extends ControllerBase
     {
         parent::initialize();
         $this->relationModel = new Relation();
-        $this->accountModel = new AccountsModel();
+        $this->accountModel = new Accounts();
     }
 
 

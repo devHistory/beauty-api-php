@@ -8,7 +8,7 @@ use Phalcon\Mvc\Model;
 use MongoDB\BSON\ObjectId;
 use Exception;
 
-class AccountsModel extends Model
+class Accounts extends Model
 {
 
     public function existsAccount($id)

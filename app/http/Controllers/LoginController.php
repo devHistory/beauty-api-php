@@ -4,7 +4,7 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Models\AccountsModel;
+use App\Http\Models\Accounts;
 use Zend\Validator\Uuid;
 use Zend\Validator\EmailAddress;
 use Zend\Validator\Regex;
@@ -20,7 +20,7 @@ class LoginController extends ControllerBase
     public function initialize()
     {
         parent::initialize();
-        $this->accountModel = new AccountsModel();
+        $this->accountModel = new Accounts();
     }
 
 

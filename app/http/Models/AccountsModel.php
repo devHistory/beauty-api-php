@@ -11,6 +11,19 @@ use Exception;
 class AccountsModel extends Model
 {
 
+    public function existsAccount($id)
+    {
+        $k = '_account|' . $id;
+        if ($this->di['cache']->get($k)) {
+            return true;
+        }
+        if ($this->getAccountById($id)) {
+            return true;
+        }
+        return false;
+    }
+
+
     public function createAccount($account = '', $password = '', $options = [])
     {
         $mongodb = $this->di['mongodb'];

@@ -14,6 +14,7 @@ use Phalcon\DI\FactoryDefault,
     Phalcon\Cache\Backend\Redis as RedisCache,
     App\Providers\Components\Locale,
     App\Providers\Components\Rpc,
+    App\Providers\Components\Utils,
     Symfony\Component\Yaml\Yaml as SymfonyYaml,
     MongoDB\Client as MongoDBClient;
 
@@ -44,6 +45,11 @@ $di->set('locale', function () {
 
 $di->set('rpc', function () {
     return new Rpc();
+}, true);
+
+
+$di->set('utils', function () {
+    return new Utils();
 }, true);
 
 

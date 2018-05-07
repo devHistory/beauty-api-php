@@ -15,6 +15,9 @@ class ControllerBase extends Controller
     use AesTrait;
 
 
+    public $uid;
+
+
     public $data;
 
 
@@ -38,8 +41,7 @@ class ControllerBase extends Controller
 
         // check argv
         $iv = base64_decode($this->request->getHeader('Xt-Iv'));
-        $raw = base64_decode($this->request->getRawBody());
-        if (!$iv || !$raw) {
+        if (!$iv) {
             $output = [
                 'code'    => 400,
                 'message' => 'failure, missing argv'
@@ -47,6 +49,7 @@ class ControllerBase extends Controller
             $this->response->setJsonContent($output)->send();
             exit();
         }
+        $raw = base64_decode($this->request->getRawBody());
 
         // decrypt
         try {

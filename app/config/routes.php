@@ -7,6 +7,7 @@
  */
 
 use Phalcon\Mvc\Router;
+use Phalcon\Mvc\Router\Group;
 
 
 $router = new Router(false);
@@ -21,6 +22,18 @@ $router->add('/login/([a-z]{2,10})', ['controller' => 'login', 'action' => 'plat
 $router->add('/login/device', ['controller' => 'login', 'action' => 'device']);
 $router->add('/login', ['controller' => 'login', 'action' => 'login']);
 $router->add('/register', ['controller' => 'login', 'action' => 'register']);
+
+// relation
+$relation = new Group(['controller' => 'relation']);
+$relation->setPrefix('/relation');
+$relation->addGet('/friends', ['action' => 'getFriends']);
+$relation->addPost('/friends', ['action' => 'addFriends']);
+$relation->addDelete('/friends', ['action' => 'delFriends']);
+$relation->addPost('/follow', ['action' => 'addFollow']);
+$relation->addDelete('/follow', ['action' => 'delFollow']);
+$relation->addGet('/following', ['action' => 'following']);
+$relation->addGet('/followers', ['action' => 'followers']);
+$router->mount($relation);
 
 $router->setDefaultModule('v1');
 $router->setDefaultNamespace('App\Http\Controllers');

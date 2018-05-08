@@ -42,6 +42,7 @@ class LoginController extends ControllerBase
                 'message' => 'missing argv password'
             ]);
         }
+        $this->data['account'] = strtolower($this->data['account']);
 
 
         // validator
@@ -90,9 +91,9 @@ class LoginController extends ControllerBase
 
         // output
         $payload = [
-            'uid'        => $account['_id'],
-            'account'    => $account['account'],
-            'createTime' => $account['createTime'],
+            'uid'     => $account['_id'],
+            'account' => $account['account'],
+            'cTime'   => $account['cTime'],
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -120,6 +121,7 @@ class LoginController extends ControllerBase
                 'message' => 'missing password'
             ]);
         }
+        $this->data['account'] = strtolower($this->data['account']);
 
 
         // validator
@@ -172,9 +174,9 @@ class LoginController extends ControllerBase
 
         // output
         $payload = [
-            'uid'        => $account['_id'],
-            'account'    => $account['account'],
-            'createTime' => $account['createTime'],
+            'uid'     => $account['_id'],
+            'account' => $account['account'],
+            'cTime'   => $account['cTime'],
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -203,7 +205,8 @@ class LoginController extends ControllerBase
             ]);
         }
 
-        if (!($account = $this->accountModel->getAccountByUuid($this->data['uuid']))) {
+        $uuid = strtolower($this->data['uuid']);
+        if (!($account = $this->accountModel->getAccountByUuid($uuid))) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'failed'
@@ -212,9 +215,9 @@ class LoginController extends ControllerBase
 
         // output
         $payload = [
-            'uid'        => $account['_id'],
-            'account'    => $account['account'],
-            'createTime' => $account['createTime'],
+            'uid'     => $account['_id'],
+            'account' => $account['account'],
+            'cTime'   => $account['cTime'],
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -275,9 +278,9 @@ class LoginController extends ControllerBase
 
         // output
         $payload = [
-            'uid'        => $account['_id'],
-            'account'    => $account['account'],
-            'createTime' => $account['createTime'],
+            'uid'     => $account['_id'],
+            'account' => $account['account'],
+            'cTime'   => $account['cTime'],
         ];
         return $this->response->setJsonContent([
             'code'    => 200,

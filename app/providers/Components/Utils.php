@@ -122,9 +122,11 @@ class Utils extends Component
             }
             foreach ($field as $f) {
                 if (empty($dict[$v[$key]][$f])) {
-                    continue;
+                    $data[$k][$f] = '';
                 }
-                $data[$k][$f] = $dict[$v[$key]][$f];
+                else {
+                    $data[$k][$f] = $dict[$v[$key]][$f];
+                }
             }
         }
         return $data;

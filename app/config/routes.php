@@ -35,6 +35,13 @@ $relation->addGet('/following', ['action' => 'following']);
 $relation->addGet('/followers', ['action' => 'followers']);
 $router->mount($relation);
 
+$router->addGet('/posts/([a-f0-9]{24})', ['controller' => 'posts', 'action' => 'get', 'postId' => 1]);
+$router->addPost('/posts', ['controller' => 'posts', 'action' => 'add']);
+$router->addDelete('/posts/([a-f0-9]{24})', ['controller' => 'posts', 'action' => 'del', 'postId' => 1]);
+
+$router->addPost('/comments', ['controller' => 'comments', 'action' => 'add']);
+$router->addDelete('/comments/([a-f0-9]{24})', ['controller' => 'comments', 'action' => 'del', 'commentId' => 1]);
+
 $router->setDefaultModule('v1');
 $router->setDefaultNamespace('App\Http\Controllers');
 $router->setDefaultController('index');

@@ -83,8 +83,8 @@ class RelationController extends ControllerBase
             'code'    => 200,
             'message' => 'success',
             'payload' => [
-                'count' => count($data),
-                'list'  => $data
+                'num'  => count($data),
+                'list' => $data
             ]
         ]);
     }
@@ -152,10 +152,10 @@ class RelationController extends ControllerBase
         $data = $this->relationModel->listFollowers($this->uid);
         return $this->response->setJsonContent([
             'code'    => 200,
-            'msg'     => 'success',
+            'message' => 'success',
             'payload' => [
-                'count' => count($data),
-                'list'  => $data
+                'num'  => count($data),
+                'list' => $data
             ]
         ]);
     }
@@ -167,10 +167,10 @@ class RelationController extends ControllerBase
         $data = $this->relationModel->listFollowing($this->uid);
         return $this->response->setJsonContent([
             'code'    => 200,
-            'msg'     => 'success',
+            'message' => 'success',
             'payload' => [
-                'count' => count($data),
-                'list'  => $data
+                'num'  => count($data),
+                'list' => $data
             ]
         ]);
     }

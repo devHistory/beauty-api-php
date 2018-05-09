@@ -23,13 +23,20 @@ class Posts extends Model
 
 
     // 获取
-    public function get($postId = '')
+    public function get($postId = '', $attr = [])
     {
         $mongodb = $this->di['mongodb'];
         $db = $this->di['config']->database->mongodb->database;
-        return $mongodb->$db->posts->findOne([
-            '_id' => $postId
-        ]);
+        if ($attr) {
+            $projection = [];
+            if (is_array($attr)) {
+                foreach ($attr as $v) {
+                    $projection[$v] = 1;
+                }
+            }
+            return $mongodb->$db->posts->findOne(['_id' => $postId], ['projection' => $projection]);
+        }
+        return $mongodb->$db->posts->findOne(['_id' => $postId]);
     }
 
 

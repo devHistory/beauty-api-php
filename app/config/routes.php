@@ -40,7 +40,9 @@ $router->addPost('/posts', ['controller' => 'posts', 'action' => 'add']);
 $router->addDelete('/posts/([a-f0-9]{24})', ['controller' => 'posts', 'action' => 'del', 'postId' => 1]);
 $router->addPost('/comments', ['controller' => 'comments', 'action' => 'add']);
 $router->addDelete('/comments/([a-f0-9]{24})', ['controller' => 'comments', 'action' => 'del', 'commentId' => 1]);
-
+$router->addGet('/favorites', ['controller' => 'favorites', 'action' => 'get']);
+$router->addPost('/favorites', ['controller' => 'favorites', 'action' => 'add']);
+$router->addDelete('/favorites/([a-f0-9]{24})', ['controller' => 'favorites', 'action' => 'del', 'id' => 1]);
 $router->addPost('/report', ['controller' => 'report', 'action' => 'report']);
 $router->addPost('/report/feedback', ['controller' => 'report', 'action' => 'feedback']);
 

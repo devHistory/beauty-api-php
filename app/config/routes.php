@@ -45,6 +45,8 @@ $router->addPost('/favorites', ['controller' => 'favorites', 'action' => 'add'])
 $router->addDelete('/favorites/([a-f0-9]{24})', ['controller' => 'favorites', 'action' => 'del', 'id' => 1]);
 $router->addPost('/report', ['controller' => 'report', 'action' => 'report']);
 $router->addPost('/report/feedback', ['controller' => 'report', 'action' => 'feedback']);
+$router->addPost('/setting/name', ['controller' => 'setting', 'action' => 'name']);
+$router->addPost('/setting/attribute', ['controller' => 'setting', 'action' => 'attribute']);
 
 $router->setDefaultModule('v1');
 $router->setDefaultNamespace('App\Http\Controllers');

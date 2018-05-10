@@ -63,6 +63,12 @@ class LoginController extends ControllerBase
                 'account'  => $this->data['account'],
                 'password' => $this->data['password'],
             ]);
+            if ($result === false) {
+                return $this->response->setJsonContent([
+                    'code'    => 400,
+                    'message' => 'rpc request error'
+                ]);
+            }
             if ($result->code != 200) {
                 return $this->response->setJsonContent([
                     'code'    => $result->code,
@@ -142,6 +148,12 @@ class LoginController extends ControllerBase
                 'account'  => $this->data['account'],
                 'password' => $this->data['password'],
             ]);
+            if ($result === false) {
+                return $this->response->setJsonContent([
+                    'code'    => 400,
+                    'message' => 'rpc request error'
+                ]);
+            }
             if ($result->code != 200) {
                 return $this->response->setJsonContent([
                     'code'    => $result->code,

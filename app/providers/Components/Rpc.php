@@ -24,6 +24,9 @@ class Rpc
         $response = $client->send($request, ['timeout' => 3]);
 
         // response
+        if ($response->getBody()->getSize() == 0) {
+            return false;
+        }
         return json_decode($response->getBody()->getContents());
     }
 

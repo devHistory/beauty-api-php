@@ -38,7 +38,7 @@ class RelationController extends ControllerBase
                 'message' => 'invalid argv uid'
             ]);
         }
-        if (!$this->accountModel->existsAccount($this->data['uid'])) {
+        if (!$this->accountModel->exists($this->data['uid'])) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'uid is not exists'
@@ -105,7 +105,7 @@ class RelationController extends ControllerBase
                 'message' => 'invalid argv uid'
             ]);
         }
-        if (!$this->accountModel->existsAccount($this->data['uid'])) {
+        if (!$this->accountModel->exists($this->data['uid'])) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'uid is not exists'

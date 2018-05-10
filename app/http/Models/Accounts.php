@@ -11,7 +11,7 @@ use Exception;
 class Accounts extends Model
 {
 
-    public function existsAccount($id)
+    public function exists($id)
     {
         $k = '_account|' . $id;
         if ($this->di['cache']->get($k)) {
@@ -24,7 +24,7 @@ class Accounts extends Model
     }
 
 
-    public function createAccount($account = '', $password = '', $options = [])
+    public function addAccount($account = '', $password = '', $options = [])
     {
         $mongodb = $this->di['mongodb'];
         $db = $this->di['config']['database']['mongodb']['database'];
@@ -86,7 +86,7 @@ class Accounts extends Model
         }
 
         // create
-        $account = $this->createAccount($uuid, null);
+        $account = $this->addAccount($uuid, null);
         if (!$account) {
             return false;
         }

@@ -78,7 +78,7 @@ class LoginController extends ControllerBase
         }
         else {
             // Local Account System
-            $account = $this->accountModel->createAccount($this->data['account'], $this->data['password']);
+            $account = $this->accountModel->addAccount($this->data['account'], $this->data['password']);
             if (!$account) {
                 return $this->response->setJsonContent([
                     'code'    => 400,

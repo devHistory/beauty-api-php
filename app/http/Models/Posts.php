@@ -11,7 +11,7 @@ class Posts extends Model
 {
 
     // 检查
-    public function existsPost($id = '')
+    public function exists($id = '')
     {
         $mongodb = $this->di['mongodb'];
         $db = $this->di['config']->database->mongodb->database;
@@ -109,7 +109,7 @@ class Posts extends Model
         if (!$uid || !$postId || !$content) {
             return false;
         }
-        if (!$this->existsPost($postId)) {
+        if (!$this->exists($postId)) {
             return false;
         }
 

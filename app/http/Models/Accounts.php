@@ -136,4 +136,16 @@ class Accounts extends Model
         return true;
     }
 
+
+    public function setPass($uid = '', $oldPass, $newPass)
+    {
+        $account = $this->getAccountById($uid);
+        if (!empty($account['password']) && !password_verify($oldPass, $account['password'])) {
+            return false;
+        }
+        $password = password_hash($newPass, PASSWORD_DEFAULT);
+        $this->setAttribute($uid, ['password' => $password]);
+        return true;
+    }
+
 }

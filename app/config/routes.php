@@ -46,6 +46,7 @@ $router->addDelete('/favorites/([a-f0-9]{24})', ['controller' => 'favorites', 'a
 $router->addPost('/report', ['controller' => 'report', 'action' => 'report']);
 $router->addPost('/report/feedback', ['controller' => 'report', 'action' => 'feedback']);
 $router->addPost('/setting/name', ['controller' => 'setting', 'action' => 'name']);
+$router->addPost('/setting/password', ['controller' => 'setting', 'action' => 'password']);
 $router->addPost('/setting/attribute', ['controller' => 'setting', 'action' => 'attribute']);
 
 $router->setDefaultModule('v1');

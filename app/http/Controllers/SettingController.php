@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Models\Accounts;
 use App\Providers\Components\FilterTrait;
+use Zend\Validator\Regex;
 
 class SettingController extends ControllerBase
 {
@@ -22,6 +23,9 @@ class SettingController extends ControllerBase
     }
 
 
+    /**
+     * name
+     */
     public function nameAction()
     {
         $name = $this->filter($this->data['name'], 'string');
@@ -39,6 +43,58 @@ class SettingController extends ControllerBase
     }
 
 
+    /**
+     * old
+     * pass
+     */
+    public function passwordAction()
+    {
+        $oldPass = $this->filter($this->data['old'], 'string');
+        $newPass = $this->filter($this->data['pass'], 'string');
+
+        // 复杂度
+        if ((strlen($newPass) < 6) || !preg_match("/[0-9]+/", $newPass) || !preg_match("/[a-zA-Z]+/", $newPass)) {
+            return $this->response->setJsonContent(['code' => 400, 'message' => 'too sample']);
+        }
+
+        // if use RPC or Local
+        if ($this->di['config']['rpc']['account']) {
+            $account = $this->accountModel->getAccountById($this->uid);
+            $validator = new Regex(['pattern' => "/^[a-f0-9]{24}$/"]);
+            if (!$validator->isValid($account['account'])) {
+                return $this->response->setJsonContent([
+                    'code'    => 400,
+                    'message' => 'not bind account'
+                ]);
+            }
+            $response = $this->rpc->account('/setting/password', [
+                'uid'  => $account['account'],
+                'old'  => $oldPass,
+                'pass' => $newPass,
+            ]);
+            if ($response->code != 200) {
+                return $this->response->setJsonContent([
+                    'code'    => $response->code,
+                    'message' => $response->message
+                ]);
+            }
+            return $this->response->setJsonContent([
+                'code'    => 200,
+                'message' => 'success'
+            ]);
+        }
+        else {
+            if (!$this->accountModel->setPass($this->uid, $oldPass, $newPass)) {
+                return $this->response->setJsonContent(['code' => 400, 'message' => 'old password error']);
+            }
+        }
+        return $this->response->setJsonContent(['code' => 200, 'message' => 'success']);
+    }
+
+
+    /**
+     * set attribute
+     */
     public function attributeAction()
     {
         $data = [
@@ -75,7 +131,9 @@ class SettingController extends ControllerBase
     }
 
 
-    // 系统设置
+    /**
+     * system setting
+     */
     public function systemAction()
     {
     }

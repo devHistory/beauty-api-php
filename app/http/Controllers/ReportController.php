@@ -6,10 +6,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Models\Posts;
 use App\Http\Models\Report;
-use Phalcon\Filter;
+use App\Providers\Components\FilterTrait;
 
 class ReportController extends ControllerBase
 {
+
+    use FilterTrait;
+
 
     private $postsModel;
     private $reportModel;
@@ -28,10 +31,9 @@ class ReportController extends ControllerBase
      */
     public function reportAction()
     {
-        $filter = new Filter();
-        $type = empty($this->data['type']) ? null : $filter->sanitize($this->data['type'], 'alphanum');
-        $id = empty($this->data['id']) ? null : $filter->sanitize($this->data['id'], 'alphanum');
-        $content = empty($this->data['content']) ? null : $filter->sanitize($this->data['content'], 'string');
+        $type = $this->filter($this->data['type'], 'alphanum', null);
+        $id = $this->filter($this->data['id'], 'alphanum', null);
+        $content = $this->filter($this->data['content'], 'string', null);
 
         if (!$type || !$id || !$content) {
             return $this->response->setJsonContent([
@@ -70,8 +72,7 @@ class ReportController extends ControllerBase
      */
     public function feedbackAction()
     {
-        $filter = new Filter();
-        $content = empty($this->data['content']) ? null : $filter->sanitize($this->data['content'], 'string');
+        $content = $this->filter($this->data['content'], 'string', null);
         if (!$this->reportModel->addFeedback($this->uid, $content)) {
             return $this->response->setJsonContent([
                 'code'    => 400,

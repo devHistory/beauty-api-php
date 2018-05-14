@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Models\Posts;
-use Phalcon\Filter;
+use App\Providers\Components\FilterTrait;
 
 class CommentsController extends ControllerBase
 {
+
+    use FilterTrait;
+
 
     private $postModel;
 
@@ -25,9 +28,8 @@ class CommentsController extends ControllerBase
      */
     public function addAction()
     {
-        $filter = new Filter();
-        $postId = empty($this->data['pid']) ? '' : $filter->sanitize($this->data['pid'], 'alphanum');
-        $content = empty($this->data['content']) ? '' : $filter->sanitize($this->data['content'], 'string');
+        $postId = $this->filter($this->data['pid'], 'alphanum', '');
+        $content = $this->filter($this->data['content'], 'string', '');
 
         if (!$postId || !$content) {
             return $this->response->setJsonContent([

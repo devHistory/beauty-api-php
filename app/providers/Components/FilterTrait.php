@@ -8,14 +8,14 @@ use Phalcon\Filter;
 trait FilterTrait
 {
 
-    private $f;
+    private $_f;
 
     public function filter(&$data = null, $rule = '', $default = null)
     {
-        if (!$this->f) {
-            $this->f = new Filter();
+        if (!$this->_f) {
+            $this->_f = new Filter();
         }
-        return empty($data) ? $default : $this->f->sanitize($data, $rule);
+        return empty($data) ? $default : $this->_f->sanitize($data, $rule);
     }
 
 }

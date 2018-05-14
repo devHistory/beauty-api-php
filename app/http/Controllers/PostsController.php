@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Models\Posts;
-use Phalcon\Filter;
+use App\Providers\Components\FilterTrait;
 
 class PostsController extends ControllerBase
 {
+
+    use FilterTrait;
+
 
     private $postsModel;
 
@@ -82,12 +85,11 @@ class PostsController extends ControllerBase
     // 创建
     public function addAction()
     {
-        $filter = new Filter();
-        $type = empty($this->data['type']) ? 'text' : $filter->sanitize($this->data['type'], 'alphanum');
-        $content = empty($this->data['content']) ? '' : $filter->sanitize($this->data['content'], 'string');
-        $files = empty($this->data['files']) ? '' : $this->data['files'];
+        $type = $this->filter($this->data['type'], 'alphanum', 'text');
+        $content = $this->filter($this->data['content'], 'string', '');
+        $files = $this->filter($this->data['files'], 'string', '');
+        $locale = $this->filter($this->data['locale'], 'string', null);
         $anonymous = empty($this->data['anonymous']) ? 0 : 1;
-        $locale = empty($this->data['locale']) ? null : $filter->sanitize($this->data['locale'], 'string');
         $lat = empty($this->data['lat']) ? null : (float)$this->data['lat'];
         $lng = empty($this->data['lng']) ? null : (float)$this->data['lng'];
 

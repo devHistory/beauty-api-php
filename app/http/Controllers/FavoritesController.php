@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Models\Favorites;
-use Phalcon\Filter;
+use App\Providers\Components\FilterTrait;
 
 class FavoritesController extends ControllerBase
 {
+
+    use FilterTrait;
+
 
     private $favoritesModel;
 
@@ -25,8 +28,7 @@ class FavoritesController extends ControllerBase
     // 列表 type
     public function getAction()
     {
-        $filter = new Filter();
-        $type = empty($this->data['type']) ? 'post' : $filter->sanitize($this->data['type'], 'alphanum');
+        $type = $this->filter($this->data['type'], 'alphanum', 'post');
 
         if (!in_array($type, $this->allowType)) {
             return $this->response->setJsonContent(['code' => 400, 'message' => 'error argv']);
@@ -55,9 +57,8 @@ class FavoritesController extends ControllerBase
     // 收藏 id, type
     public function addAction()
     {
-        $filter = new Filter();
-        $id = empty($this->data['id']) ? null : $filter->sanitize($this->data['id'], 'alphanum');
-        $type = empty($this->data['type']) ? 'post' : $filter->sanitize($this->data['type'], 'alphanum');
+        $id = $this->filter($this->data['id'], 'alphanum', null);
+        $type = $this->filter($this->data['type'], 'alphanum', 'post');
 
         // check
         if (!$id || !$type || !in_array($type, $this->allowType)) {
@@ -80,9 +81,8 @@ class FavoritesController extends ControllerBase
     // 删除 id, type
     public function delAction()
     {
-        $filter = new Filter();
         $id = $this->dispatcher->getParam('id');
-        $type = empty($this->data['type']) ? 'post' : $filter->sanitize($this->data['type'], 'alphanum');
+        $type = $this->filter($this->data['type'], 'alphanum', 'post');
 
         // check
         if (!$id || !$type || !in_array($type, $this->allowType)) {

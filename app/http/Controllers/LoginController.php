@@ -9,6 +9,7 @@ use Zend\Validator\Uuid;
 use Zend\Validator\EmailAddress;
 use Zend\Validator\Regex;
 use Xxtime\Oauth\OauthAdaptor;
+use Carbon\Carbon;
 use Exception;
 
 class LoginController extends ControllerBase
@@ -184,6 +185,11 @@ class LoginController extends ControllerBase
         }
 
 
+        if ($blockMsg = $this->isBlocked($account)) {
+            return $this->response->setJsonContent(['code' => 400, 'message' => $blockMsg]);
+        }
+
+
         // output
         $payload = [
             'uid'     => $account['_id'],
@@ -218,12 +224,18 @@ class LoginController extends ControllerBase
         }
 
         $uuid = strtolower($this->data['uuid']);
-        if (!($account = $this->accountModel->getAccountByUuid($uuid))) {
+        if (!$account = $this->accountModel->getAccountByUuid($uuid)) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'failed'
             ]);
         }
+
+
+        if ($blockMsg = $this->isBlocked($account)) {
+            return $this->response->setJsonContent(['code' => 400, 'message' => $blockMsg]);
+        }
+
 
         // output
         $payload = [
@@ -288,6 +300,11 @@ class LoginController extends ControllerBase
         }
 
 
+        if ($blockMsg = $this->isBlocked($account)) {
+            return $this->response->setJsonContent(['code' => 400, 'message' => $blockMsg]);
+        }
+
+
         // output
         $payload = [
             'uid'     => $account['_id'],
@@ -299,6 +316,20 @@ class LoginController extends ControllerBase
             'message' => 'success',
             'payload' => $payload
         ]);
+    }
+
+
+    /**
+     * check if blocked
+     * @param $account
+     * @return bool|string
+     */
+    private function isBlocked(&$account)
+    {
+        if (!empty($account['blocked']) && $account['blocked'] > time()) {
+            return 'blocked ' . Carbon::now()->timestamp($account['blocked'])->diffForHumans();
+        }
+        return false;
     }
 
 }

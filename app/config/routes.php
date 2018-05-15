@@ -49,7 +49,7 @@ $router->addPost('/setting/name', ['controller' => 'setting', 'action' => 'name'
 $router->addPost('/setting/password', ['controller' => 'setting', 'action' => 'password']);
 $router->addPost('/setting/attribute', ['controller' => 'setting', 'action' => 'attribute']);
 
-$router->setDefaultModule('v1');
+$router->setDefaultModule('m1');
 $router->setDefaultNamespace('App\Http\Controllers');
 $router->setDefaultController('index');
 $router->setDefaultAction('index');

@@ -18,13 +18,13 @@ $router->add('/', ['controller' => 'default', 'action' => 'index']);
 
 $router->add('/keys/public', ['controller' => 'keys', 'action' => 'public']);
 $router->add('/keys/secrets', ['controller' => 'keys', 'action' => 'secrets']);
-$router->add('/login/([a-z]{2,10})', ['controller' => 'login', 'action' => 'platform', 'type' => 1]);
-$router->add('/login/device', ['controller' => 'login', 'action' => 'device']);
-$router->add('/login', ['controller' => 'login', 'action' => 'login']);
-$router->add('/register', ['controller' => 'login', 'action' => 'register']);
+$router->add('/login/([a-z]{2,10})', ['controller' => 'V1\Login', 'action' => 'platform', 'type' => 1]);
+$router->add('/login/device', ['controller' => 'V1\Login', 'action' => 'device']);
+$router->add('/login', ['controller' => 'V1\Login', 'action' => 'login']);
+$router->add('/register', ['controller' => 'V1\Login', 'action' => 'register']);
 
 // relation
-$relation = new Group(['controller' => 'relation']);
+$relation = new Group(['controller' => 'V1\Relation']);
 $relation->setPrefix('/relation');
 $relation->addGet('/friends', ['action' => 'getFriends']);
 $relation->addPost('/friends', ['action' => 'addFriends']);
@@ -35,19 +35,19 @@ $relation->addGet('/following', ['action' => 'following']);
 $relation->addGet('/followers', ['action' => 'followers']);
 $router->mount($relation);
 
-$router->addGet('/posts/([a-f0-9]{24})', ['controller' => 'posts', 'action' => 'get', 'postId' => 1]);
-$router->addPost('/posts', ['controller' => 'posts', 'action' => 'add']);
-$router->addDelete('/posts/([a-f0-9]{24})', ['controller' => 'posts', 'action' => 'del', 'postId' => 1]);
-$router->addPost('/comments', ['controller' => 'comments', 'action' => 'add']);
-$router->addDelete('/comments/([a-f0-9]{24})', ['controller' => 'comments', 'action' => 'del', 'commentId' => 1]);
-$router->addGet('/favorites', ['controller' => 'favorites', 'action' => 'get']);
-$router->addPost('/favorites', ['controller' => 'favorites', 'action' => 'add']);
-$router->addDelete('/favorites/([a-f0-9]{24})', ['controller' => 'favorites', 'action' => 'del', 'id' => 1]);
-$router->addPost('/report', ['controller' => 'report', 'action' => 'report']);
-$router->addPost('/report/feedback', ['controller' => 'report', 'action' => 'feedback']);
-$router->addPost('/setting/name', ['controller' => 'setting', 'action' => 'name']);
-$router->addPost('/setting/password', ['controller' => 'setting', 'action' => 'password']);
-$router->addPost('/setting/attribute', ['controller' => 'setting', 'action' => 'attribute']);
+$router->addGet('/posts/([a-f0-9]{24})', ['controller' => 'V1\Posts', 'action' => 'get', 'postId' => 1]);
+$router->addPost('/posts', ['controller' => 'V1\Posts', 'action' => 'add']);
+$router->addDelete('/posts/([a-f0-9]{24})', ['controller' => 'V1\Posts', 'action' => 'del', 'postId' => 1]);
+$router->addPost('/comments', ['controller' => 'V1\Comments', 'action' => 'add']);
+$router->addDelete('/comments/([a-f0-9]{24})', ['controller' => 'V1\Comments', 'action' => 'del', 'commentId' => 1]);
+$router->addGet('/favorites', ['controller' => 'V1\Favorites', 'action' => 'get']);
+$router->addPost('/favorites', ['controller' => 'V1\Favorites', 'action' => 'add']);
+$router->addDelete('/favorites/([a-f0-9]{24})', ['controller' => 'V1\Favorites', 'action' => 'del', 'id' => 1]);
+$router->addPost('/report', ['controller' => 'V1\Report', 'action' => 'report']);
+$router->addPost('/report/feedback', ['controller' => 'V1\Report', 'action' => 'feedback']);
+$router->addPost('/setting/name', ['controller' => 'V1\Setting', 'action' => 'name']);
+$router->addPost('/setting/password', ['controller' => 'V1\Setting', 'action' => 'password']);
+$router->addPost('/setting/attribute', ['controller' => 'V1\Setting', 'action' => 'attribute']);
 
 $router->setDefaultModule('m1');
 $router->setDefaultNamespace('App\Http\Controllers');

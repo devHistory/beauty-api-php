@@ -15,6 +15,7 @@ use Phalcon\DI\FactoryDefault,
     App\Providers\Components\Locale,
     App\Providers\Components\Rpc,
     App\Providers\Components\Utils,
+    App\Providers\Components\Support,
     Symfony\Component\Yaml\Yaml as SymfonyYaml,
     MongoDB\Client as MongoDBClient;
 
@@ -50,6 +51,11 @@ $di->set('rpc', function () {
 
 $di->set('utils', function () {
     return new Utils();
+}, true);
+
+
+$di->set('support', function () {
+    return new Support();
 }, true);
 
 

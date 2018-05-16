@@ -16,8 +16,8 @@ $router->removeExtraSlashes(true);
 $router->notFound(['controller' => 'default', 'action' => 'notFound']);
 $router->add('/', ['controller' => 'default', 'action' => 'index']);
 
-$router->add('/keys/public', ['controller' => 'keys', 'action' => 'public']);
-$router->add('/keys/secrets', ['controller' => 'keys', 'action' => 'secrets']);
+$router->add('/keys/public', ['controller' => 'V1\Keys', 'action' => 'public']);
+$router->add('/keys/secrets', ['controller' => 'V1\Keys', 'action' => 'secrets']);
 $router->add('/login/([a-z]{2,10})', ['controller' => 'V1\Login', 'action' => 'platform', 'type' => 1]);
 $router->add('/login/device', ['controller' => 'V1\Login', 'action' => 'device']);
 $router->add('/login', ['controller' => 'V1\Login', 'action' => 'login']);

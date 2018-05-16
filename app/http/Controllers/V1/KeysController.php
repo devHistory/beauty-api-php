@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V1;
 
 
 use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\Dispatcher;
 use Zend\Crypt\PublicKey\Rsa;
+use MongoDB\BSON\ObjectId;
 use Exception;
 
 class KeysController extends Controller
@@ -32,14 +32,17 @@ class KeysController extends Controller
     }
 
 
+    /**
+     * Set AES key and get a SID
+     */
     public function secretsAction()
     {
         // get data
         $encrypt = $this->request->getRawBody();
         if (!$encrypt) {
             return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'failure, no data',
+                'code'    => 406,
+                'message' => 'failed, no data',
             ]);
         }
 
@@ -51,17 +54,24 @@ class KeysController extends Controller
             $decrypt = $rsa->decrypt(base64_decode($encrypt));
         } catch (Exception $e) {
             return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'failure, decrypt error',
+                'code'    => 406,
+                'message' => 'failed, can not decrypt',
             ]);
         }
 
         // set aes key
-        $this->session->set('key', $decrypt);
-        return $this->response->setJsonContent([
+        $sid = new ObjectId();
+        $timeout = 86400 * 14;
+        $this->cache->set('_sid|' . $sid->__toString(), $decrypt, $timeout);
+        $output = [
             'code'    => 200,
             'message' => 'success',
-        ]);
+            'payload' => [
+                'sid'     => $sid->__toString(),
+                'timeout' => $timeout,
+            ]
+        ];
+        return $this->response->setJsonContent($output);
     }
 
 }

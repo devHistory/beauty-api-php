@@ -30,11 +30,11 @@ class ApplicationListener
     public function boot(Event $event, Application $app)
     {
         // check time
-        $timestamp = $app->request->getHeader('Xt-Timestamp');
+        $timestamp = $app->request->getHeader('Xt-Time');
         if (!$timestamp || abs(time() - $timestamp) > 300) {
             $output = [
-                'code'    => 400,
-                'message' => 'failure, timeout'
+                'code'    => 408,
+                'message' => 'failed, timeout'
             ];
             $app->response->setJsonContent($output)->send();
             exit();

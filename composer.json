@@ -8,6 +8,7 @@
     "zendframework/zend-crypt": "~3.2",
     "zendframework/zend-validator": "~2.10",
     "guzzlehttp/guzzle": "~6.3",
-    "nesbot/carbon": "~1.27"
+    "nesbot/carbon": "~1.27",
+    "firebase/php-jwt": "~v5.0"
   }
 }

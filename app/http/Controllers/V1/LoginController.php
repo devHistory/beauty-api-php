@@ -18,9 +18,13 @@ class LoginController extends ControllerBase
     private $accountModel;
 
 
+    private $timeout = 86400 * 14;
+
+
     public function initialize()
     {
-        parent::initialize();
+        $this->checkSid();
+        $this->prepareData();
         $this->accountModel = new Accounts();
     }
 
@@ -100,7 +104,7 @@ class LoginController extends ControllerBase
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'cTime'   => $account['cTime'],
+            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -194,7 +198,7 @@ class LoginController extends ControllerBase
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'cTime'   => $account['cTime'],
+            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -241,7 +245,7 @@ class LoginController extends ControllerBase
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'cTime'   => $account['cTime'],
+            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -309,7 +313,7 @@ class LoginController extends ControllerBase
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'cTime'   => $account['cTime'],
+            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,

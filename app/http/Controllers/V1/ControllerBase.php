@@ -6,7 +6,6 @@ namespace App\Http\Controllers\V1;
 
 use App\Providers\Components\AesTrait;
 use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\Dispatcher;
 use Exception;
 
 class ControllerBase extends Controller
@@ -21,43 +20,58 @@ class ControllerBase extends Controller
     public $data;
 
 
-    public function beforeExecuteRoute(Dispatcher $dispatcher)
-    {
-    }
+    private $_aesKey;
+
+
+    private $_iv;
 
 
     public function initialize()
     {
-        // check secret key
-        $key = $this->session->get('key');
-        if (!$key) {
-            $output = [
-                'code'    => 400,
-                'message' => 'failure, missing secret key'
-            ];
+        $this->checkSid();
+        $this->checkUid();
+        $this->prepareData();
+    }
+
+
+    protected function checkSid()
+    {
+        $sid = $this->request->getHeader('Xt-Sid');
+        $this->_iv = base64_decode($this->request->getHeader('Xt-Iv'));
+        if (!$sid) {
+            $output = ['code' => 401, 'message' => 'missing argv: sid'];
+            $this->response->setJsonContent($output)->send();
+            exit();
+        }
+        if (!$this->_iv) {
+            $output = ['code' => 412, 'message' => 'missing argv: iv'];
             $this->response->setJsonContent($output)->send();
             exit();
         }
 
-        // check argv
-        $iv = base64_decode($this->request->getHeader('Xt-Iv'));
-        if (!$iv) {
+        $this->_aesKey = $this->cache->get('_sid|' . $sid);
+        if (!$this->_aesKey) {
             $output = [
-                'code'    => 400,
-                'message' => 'failure, missing argv'
+                'code'    => 408,
+                'message' => 'session timeout'
             ];
             $this->response->setJsonContent($output)->send();
             exit();
         }
+    }
+
+
+    protected function prepareData()
+    {
         $raw = base64_decode($this->request->getRawBody());
 
         // decrypt
         try {
-            $decrypt = $this->decrypt($key, $iv, $raw);
+            $decrypt = $this->decrypt($this->_aesKey, $this->_iv, $raw);
         } catch (Exception $e) {
             $output = [
-                'code'    => 400,
-                'message' => 'failure, decrypt error'
+                'code'    => 417,
+                'message' => 'decrypt failed'
             ];
             $this->response->setJsonContent($output)->send();
             exit();
@@ -66,8 +80,21 @@ class ControllerBase extends Controller
     }
 
 
-    public function afterExecuteRoute(Dispatcher $dispatcher)
+    private function checkUid()
     {
+        $token = $this->request->getHeader('Xt-Token');
+        if (!$token) {
+            $output = ['code' => 401, 'message' => 'missing argv: token'];
+            $this->response->setJsonContent($output)->send();
+            exit();
+        }
+        if (!$data = $this->support->verifyToken($token)) {
+            $output = ['code' => 401, 'message' => 'token error'];
+            $this->response->setJsonContent($output)->send();
+            exit();
+        }
+        $this->uid = $data->dat->uid;
     }
+
 
 }

@@ -20,4 +20,13 @@ class DefaultController extends Controller
         $this->view->pick("default/notFound");
     }
 
+
+    public function apiExceptionAction()
+    {
+        $code = $this->dispatcher->getParam('code');
+        $message = $this->dispatcher->getParam('message');
+        $output = ['code' => $code, 'message' => $message];
+        return $this->response->setJsonContent($output);
+    }
+
 }

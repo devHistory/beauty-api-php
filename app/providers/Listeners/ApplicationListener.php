@@ -43,8 +43,12 @@ class ApplicationListener
 
     public function beforeSendResponse(Event $event, Application $app)
     {
+        $secretKey = $app->cache->get('_sid|' . $app->request->getHeader('Xt-Sid'));
+        if (!$secretKey) {
+            return true;
+        }
         $payload = $app->response->getContent();
-        $data = $this->encrypt($app->session->get('key'), $payload);
+        $data = $this->encrypt($secretKey, $payload);
         $app->response->setHeader('Xt-Iv', base64_encode($data['0']));
         $app->response->setContent(base64_encode($data['1']));
     }

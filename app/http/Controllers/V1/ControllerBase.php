@@ -26,7 +26,7 @@ class ControllerBase extends Controller
     private $_iv;
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
         $this->checkSid();
         $this->checkUid();
@@ -39,24 +39,27 @@ class ControllerBase extends Controller
         $sid = $this->request->getHeader('Xt-Sid');
         $this->_iv = base64_decode($this->request->getHeader('Xt-Iv'));
         if (!$sid) {
-            $output = ['code' => 401, 'message' => 'missing argv: sid'];
-            $this->response->setJsonContent($output)->send();
-            exit();
+            return $this->dispatcher->forward([
+                'controller' => 'Default',
+                'action'     => 'apiException',
+                'params'     => ['code' => 401, 'message' => 'missing argv: sid']
+            ]);
         }
         if (!$this->_iv) {
-            $output = ['code' => 412, 'message' => 'missing argv: iv'];
-            $this->response->setJsonContent($output)->send();
-            exit();
+            return $this->dispatcher->forward([
+                'controller' => 'Default',
+                'action'     => 'apiException',
+                'params'     => ['code' => 412, 'message' => 'missing argv: iv']
+            ]);
         }
 
         $this->_aesKey = $this->cache->get('_sid|' . $sid);
         if (!$this->_aesKey) {
-            $output = [
-                'code'    => 408,
-                'message' => 'session timeout'
-            ];
-            $this->response->setJsonContent($output)->send();
-            exit();
+            return $this->dispatcher->forward([
+                'controller' => 'Default',
+                'action'     => 'apiException',
+                'params'     => ['code' => 408, 'message' => 'session timeout']
+            ]);
         }
     }
 
@@ -69,12 +72,11 @@ class ControllerBase extends Controller
         try {
             $decrypt = $this->decrypt($this->_aesKey, $this->_iv, $raw);
         } catch (Exception $e) {
-            $output = [
-                'code'    => 417,
-                'message' => 'decrypt failed'
-            ];
-            $this->response->setJsonContent($output)->send();
-            exit();
+            return $this->dispatcher->forward([
+                'controller' => 'Default',
+                'action'     => 'apiException',
+                'params'     => ['code' => 417, 'message' => 'decrypt failed']
+            ]);
         }
         parse_str($decrypt, $this->data);
     }
@@ -84,14 +86,18 @@ class ControllerBase extends Controller
     {
         $token = $this->request->getHeader('Xt-Token');
         if (!$token) {
-            $output = ['code' => 401, 'message' => 'missing argv: token'];
-            $this->response->setJsonContent($output)->send();
-            exit();
+            return $this->dispatcher->forward([
+                'controller' => 'Default',
+                'action'     => 'apiException',
+                'params'     => ['code' => 401, 'message' => 'missing argv: token']
+            ]);
         }
         if (!$data = $this->support->verifyToken($token)) {
-            $output = ['code' => 401, 'message' => 'token error'];
-            $this->response->setJsonContent($output)->send();
-            exit();
+            return $this->dispatcher->forward([
+                'controller' => 'Default',
+                'action'     => 'apiException',
+                'params'     => ['code' => 401, 'message' => 'token error']
+            ]);
         }
         $this->uid = $data->dat->uid;
     }

@@ -38,8 +38,8 @@ class KeysController extends Controller
     public function secretsAction()
     {
         // get data
-        $encrypt = $this->request->getRawBody();
-        if (!$encrypt) {
+        $raw = $this->request->getRawBody();
+        if (!$raw) {
             return $this->response->setJsonContent([
                 'code'    => 406,
                 'message' => 'failed, no data',
@@ -51,7 +51,7 @@ class KeysController extends Controller
             'private_key' => CONFIG_DIR . '/rsa.pem',
         ]);
         try {
-            $decrypt = $rsa->decrypt(base64_decode($encrypt));
+            $decrypt = $rsa->decrypt(base64_decode($raw));
         } catch (Exception $e) {
             return $this->response->setJsonContent([
                 'code'    => 406,

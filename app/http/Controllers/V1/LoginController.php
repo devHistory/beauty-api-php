@@ -21,7 +21,7 @@ class LoginController extends ControllerBase
     private $timeout = 86400 * 14;
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
         $this->checkSid();
         $this->prepareData();

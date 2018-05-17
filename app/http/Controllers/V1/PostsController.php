@@ -15,9 +15,9 @@ class PostsController extends ControllerBase
     private $postsModel;
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
-        parent::initialize();
+        parent::beforeExecuteRoute();
         $this->postsModel = new Posts();
     }
 

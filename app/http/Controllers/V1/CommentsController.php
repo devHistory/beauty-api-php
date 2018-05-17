@@ -15,9 +15,9 @@ class CommentsController extends ControllerBase
     private $postModel;
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
-        parent::initialize();
+        parent::beforeExecuteRoute();
         $this->postModel = new Posts();
     }
 

@@ -18,9 +18,9 @@ class ReportController extends ControllerBase
     private $reportModel;
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
-        parent::initialize();
+        parent::beforeExecuteRoute();
         $this->postsModel = new Posts();
         $this->reportModel = new Report();
     }

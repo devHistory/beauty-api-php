@@ -16,9 +16,9 @@ class SettingController extends ControllerBase
     private $accountModel;
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
-        parent::initialize();
+        parent::beforeExecuteRoute();
         $this->accountModel = new Accounts();
     }
 

@@ -18,9 +18,9 @@ class FavoritesController extends ControllerBase
     private $allowType = ['post'];
 
 
-    public function initialize()
+    public function beforeExecuteRoute()
     {
-        parent::initialize();
+        parent::beforeExecuteRoute();
         $this->favoritesModel = new Favorites();
     }
 

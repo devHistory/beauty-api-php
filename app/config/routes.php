@@ -22,6 +22,7 @@ $router->add('/login/([a-z]{2,10})', ['controller' => 'V1\Login', 'action' => 'p
 $router->add('/login/device', ['controller' => 'V1\Login', 'action' => 'device']);
 $router->add('/login', ['controller' => 'V1\Login', 'action' => 'login']);
 $router->add('/register', ['controller' => 'V1\Login', 'action' => 'register']);
+$router->add('/init', ['controller' => 'V1\Init', 'action' => 'sync']);
 
 // relation
 $relation = new Group(['controller' => 'V1\Relation']);

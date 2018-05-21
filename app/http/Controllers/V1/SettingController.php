@@ -98,17 +98,17 @@ class SettingController extends ControllerBase
     public function attributeAction()
     {
         $data = [
-            'birthday' => $this->filter($this->data['birthday'], 'int'),     // 出生19871104
-            'gender'   => (int)$this->filter($this->data['gender'], 'int'),  // 性别[1:男 2:女](不可改)
-            'locale'   => $this->filter($this->data['locale'], 'string'),    // 所在地
-            'hometown' => $this->filter($this->data['hometown'], 'string'),  // 家乡
-            'desc'     => $this->filter($this->data['desc'], 'string'),      // 签名
-            'avatar'   => $this->filter($this->data['avatar'], 'string'),    // 头像
-            'height'   => (int)$this->filter($this->data['height'], 'int'),  // 身高cm
-            'weight'   => (int)$this->filter($this->data['weight'], 'int'),  // 身高kg
-            'purpose'  => (int)$this->filter($this->data['purpose'], 'int'), // 意向[1:求撩 2:谈恋爱 3:交朋友 4:随缘 5:勿扰]
-            'relation' => (int)$this->filter($this->data['relation'], 'int'),// 情感[1:单身 2:恋爱中 3:已婚 4:离异/丧偶]
-            'sexual'   => (int)$this->filter($this->data['sexual'], 'int'),  // 取向[1:喜欢男 2:喜欢女 3:双性恋 4:无性恋]
+            'birthday' => $this->filter($this->data['birthday'], 'int'),      // 出生19871104
+            'gender'   => (int)$this->filter($this->data['gender'], 'int!'),  // 性别[1:男 2:女](不可改)
+            'locale'   => $this->filter($this->data['locale'], 'string'),     // 所在地
+            'hometown' => $this->filter($this->data['hometown'], 'string'),   // 家乡
+            'desc'     => $this->filter($this->data['desc'], 'string'),       // 签名
+            'avatar'   => $this->filter($this->data['avatar'], 'string'),     // 头像
+            'height'   => (int)$this->filter($this->data['height'], 'int!'),  // 身高cm
+            'weight'   => (int)$this->filter($this->data['weight'], 'int!'),  // 身高kg
+            'purpose'  => (int)$this->filter($this->data['purpose'], 'int!'), // 意向[1:求撩 2:谈恋爱 3:交朋友 4:随缘 5:勿扰]
+            'relation' => (int)$this->filter($this->data['relation'], 'int!'),// 情感[1:单身 2:恋爱中 3:已婚 4:离异/丧偶]
+            'sexual'   => (int)$this->filter($this->data['sexual'], 'int!'),  // 取向[1:喜欢男 2:喜欢女 3:双性恋 4:无性恋]
         ];
         $data = array_filter($data);
 

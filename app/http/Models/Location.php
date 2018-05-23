@@ -37,7 +37,7 @@ class Location extends Model
 
 
     /**
-     * 附近数据 [距离单位: near GeoJSON格式单位为米，坐标对时单位为弧度]
+     * 附近数据 并计算距离 [距离单位: near GeoJSON格式单位为米，坐标对时单位为弧度]
      * @link https://docs.mongodb.com/php-library/v1.3/tutorial/commands/index.html
      * @link https://docs.mongodb.com/manual/reference/command/geoNear/#dbcmd.geoNear
      * @param array $coordinates [lng,lat]
@@ -45,7 +45,7 @@ class Location extends Model
      * @param array $option [limit]
      * @return resource $cursor
      */
-    public function get($coordinates = [], $distance = 1000, $option = [])
+    public function getGeoNear($coordinates = [], $distance = 1000, $option = [])
     {
         $db = $this->di['config']['database']['mongodb']['database'];
         $query = [
@@ -65,27 +65,29 @@ class Location extends Model
 
 
     /**
-     * 附近数据 [不排序]
-     * The equatorial radius of the Earth is approximately 3,963.2 miles or 6,378.1 kilometers.
+     * 附近数据 不计算距离 [性能好于geoNear]
+     * 地球半径: 3,963.2英尺 或6,378.1千米.
+     * @link https://docs.mongodb.com/manual/reference/operator/query/nearSphere/#op._S_nearSphere
      * @link https://docs.mongodb.com/manual/geospatial-queries/
-     * @link https://docs.mongodb.com/manual/reference/operator/query/geoWithin/
      * @link https://docs.mongodb.com/php-library/current/reference/method/MongoDBCollection-find/#phpmethod.MongoDB%5CCollection::find
      * @param array $coordinates [lng,lat]
      * @param int $distance
      * @param array $option
      * @return resource $cursor
      */
-    public function getWithIn($coordinates = [], $distance = 1000, $option = [])
+    public function getNear($coordinates = [], $distance = 1000, $option = [])
     {
         $db = $this->di['config']['database']['mongodb']['database'];
         $cursor = $this->di['mongodb']->$db->{$this->collection}->find(
             [
                 $this->field => [
-                    '$geoWithin' => [
-                        '$centerSphere' => [
-                            $coordinates,
-                            $distance / 6378100
-                        ]
+                    '$nearSphere' => [
+                        '$geometry'    => [
+                            'type'        => 'Point',
+                            'coordinates' => $coordinates,
+                        ],
+                        '$minDistance' => 0,
+                        '$maxDistance' => $distance,
                     ]
                 ]
             ],

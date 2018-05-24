@@ -9,6 +9,7 @@
     "zendframework/zend-validator": "~2.10",
     "guzzlehttp/guzzle": "~6.3",
     "nesbot/carbon": "~1.27",
-    "firebase/php-jwt": "~v5.0"
+    "firebase/php-jwt": "~v5.0",
+    "aliyuncs/oss-sdk-php": "~2.3"
   }
 }

@@ -49,6 +49,7 @@ $router->addPost('/report/feedback', ['controller' => 'V1\Report', 'action' => '
 $router->addPost('/setting/name', ['controller' => 'V1\Setting', 'action' => 'name']);
 $router->addPost('/setting/password', ['controller' => 'V1\Setting', 'action' => 'password']);
 $router->addPost('/setting/attribute', ['controller' => 'V1\Setting', 'action' => 'attribute']);
+$router->addPost('/files/access', ['controller' => 'V1\Files', 'action' => 'access']);
 
 $router->setDefaultModule('m1');
 $router->setDefaultNamespace('App\Http\Controllers');

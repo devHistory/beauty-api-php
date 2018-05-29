@@ -42,10 +42,11 @@ class Location extends Model
      * @link https://docs.mongodb.com/manual/reference/command/geoNear/#dbcmd.geoNear
      * @param array $coordinates [lng,lat]
      * @param int $distance
+     * @param null $filter
      * @param array $option [limit]
      * @return resource $cursor
      */
-    public function getGeoNear($coordinates = [], $distance = 1000, $option = [])
+    public function getGeoNear($coordinates = [], $distance = 1000, $filter = null, $option = [])
     {
         $db = $this->di['config']['database']['mongodb']['database'];
         $query = [
@@ -56,8 +57,11 @@ class Location extends Model
             ],
             'spherical'   => 'true',
             'minDistance' => 0,
-            'maxDistance' => $distance
+            'maxDistance' => $distance,
         ];
+        if (is_array($filter)) {
+            $query['query'] = $filter;
+        }
         $query['num'] = empty($option['limit']) ? 100 : $option['limit'];
         $cursor = $this->di['mongodb']->$db->command($query);
         return $cursor;
@@ -72,27 +76,32 @@ class Location extends Model
      * @link https://docs.mongodb.com/php-library/current/reference/method/MongoDBCollection-find/#phpmethod.MongoDB%5CCollection::find
      * @param array $coordinates [lng,lat]
      * @param int $distance
+     * @param null $filter
      * @param array $option
      * @return resource $cursor
      */
-    public function getNear($coordinates = [], $distance = 1000, $option = [])
+    public function getNear($coordinates = [], $distance = 1000, $filter = null, $option = [])
     {
         $db = $this->di['config']['database']['mongodb']['database'];
-        $cursor = $this->di['mongodb']->$db->{$this->collection}->find(
-            [
-                $this->field => [
-                    '$nearSphere' => [
-                        '$geometry'    => [
-                            'type'        => 'Point',
-                            'coordinates' => $coordinates,
-                        ],
-                        '$minDistance' => 0,
-                        '$maxDistance' => $distance,
-                    ]
+        $query = [
+            $this->field => [
+                '$nearSphere' => [
+                    '$geometry'    => [
+                        'type'        => 'Point',
+                        'coordinates' => $coordinates,
+                    ],
+                    '$minDistance' => 0,
+                    '$maxDistance' => $distance,
                 ]
-            ],
-            $option
-        );
+            ]
+        ];
+        if (is_array($filter)) {
+            $query += $filter;
+        }
+        if (empty($option['limit'])) {
+            $option['limit'] = 100;
+        }
+        $cursor = $this->di['mongodb']->$db->{$this->collection}->find($query, $option);
         return $cursor;
     }
 

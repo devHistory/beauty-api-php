@@ -50,6 +50,7 @@ $router->addPost('/setting/name', ['controller' => 'V1\Setting', 'action' => 'na
 $router->addPost('/setting/password', ['controller' => 'V1\Setting', 'action' => 'password']);
 $router->addPost('/setting/attribute', ['controller' => 'V1\Setting', 'action' => 'attribute']);
 $router->addPost('/files/access', ['controller' => 'V1\Files', 'action' => 'access']);
+$router->addPost('/zone/nearby', ['controller' => 'V1\Zone', 'action' => 'nearby']);
 
 $router->setDefaultModule('m1');
 $router->setDefaultNamespace('App\Http\Controllers');

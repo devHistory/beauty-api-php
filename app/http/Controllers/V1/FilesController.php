@@ -158,8 +158,8 @@ POLICY;
     private function generatePath($prefix = 'album')
     {
         $charList = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $random = Rand::getString(16, $charList);
-        return $prefix . date('/Ym/') . substr($random, 0, 2) . '/' . $random . '.png';
+        $random = Rand::getString(24, $charList);
+        return $prefix . date('/Ym/') . $random . '.png';
     }
 
 }

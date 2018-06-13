@@ -6,21 +6,21 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Models\Posts;
 use App\Http\Models\Report;
-use App\Providers\Components\FilterTrait;
+use App\Providers\Components\UtilsTrait;
 
 class ReportController extends ControllerBase
 {
 
-    use FilterTrait;
+    use UtilsTrait;
 
 
     private $postsModel;
     private $reportModel;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
         $this->postsModel = new Posts();
         $this->reportModel = new Report();
     }

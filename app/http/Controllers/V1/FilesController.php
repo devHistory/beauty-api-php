@@ -8,7 +8,7 @@
 namespace App\Http\Controllers\V1;
 
 
-use App\Providers\Components\FilterTrait;
+use App\Providers\Components\UtilsTrait;
 use OSS\OssClient;
 use Sts\Request\V20150401 as Sts;
 use Zend\Math\Rand;
@@ -17,7 +17,7 @@ use Zend\Math\Rand;
 class FilesController extends ControllerBase
 {
 
-    use FilterTrait;
+    use UtilsTrait;
 
 
     private $default_region;
@@ -26,9 +26,9 @@ class FilesController extends ControllerBase
     private $timeout = 3600;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
 
         // set default region
         if (isset($this->config['aliyun']['region'])) {

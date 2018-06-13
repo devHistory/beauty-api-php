@@ -4,20 +4,20 @@ namespace App\Http\Controllers\V1;
 
 
 use App\Http\Models\Posts;
-use App\Providers\Components\FilterTrait;
+use App\Providers\Components\UtilsTrait;
 
 class CommentsController extends ControllerBase
 {
 
-    use FilterTrait;
+    use UtilsTrait;
 
 
     private $postModel;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
         $this->postModel = new Posts();
     }
 

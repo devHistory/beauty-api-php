@@ -5,7 +5,7 @@ namespace App\Providers\Components;
 
 use Phalcon\Filter;
 
-trait FilterTrait
+trait UtilsTrait
 {
 
     private $_f;

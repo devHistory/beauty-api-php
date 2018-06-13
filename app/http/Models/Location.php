@@ -22,7 +22,7 @@ class Location extends Model
      */
     public function set($id = '', $coordinates = [])
     {
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         $data = [
             $this->field => [
                 'type'        => 'Point',
@@ -48,7 +48,7 @@ class Location extends Model
      */
     public function getGeoNear($coordinates = [], $distance = 1000, $filter = null, $option = [])
     {
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         $query = [
             'geoNear'     => $this->collection,
             'near'        => [
@@ -82,7 +82,7 @@ class Location extends Model
      */
     public function getNear($coordinates = [], $distance = 1000, $filter = null, $option = [])
     {
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         $query = [
             $this->field => [
                 '$nearSphere' => [

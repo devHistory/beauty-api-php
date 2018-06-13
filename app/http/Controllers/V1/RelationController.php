@@ -15,9 +15,9 @@ class RelationController extends ControllerBase
     private $accountModel;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
         $this->relationModel = new Relation();
         $this->accountModel = new Accounts();
     }

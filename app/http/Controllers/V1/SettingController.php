@@ -4,21 +4,21 @@ namespace App\Http\Controllers\V1;
 
 
 use App\Http\Models\Accounts;
-use App\Providers\Components\FilterTrait;
+use App\Providers\Components\UtilsTrait;
 use Zend\Validator\Regex;
 
 class SettingController extends ControllerBase
 {
 
-    use FilterTrait;
+    use UtilsTrait;
 
 
     private $accountModel;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
         $this->accountModel = new Accounts();
     }
 
@@ -105,7 +105,7 @@ class SettingController extends ControllerBase
             'desc'     => $this->filter($this->data['desc'], 'string'),       // 签名
             'avatar'   => $this->filter($this->data['avatar'], 'string'),     // 头像
             'height'   => (int)$this->filter($this->data['height'], 'int!'),  // 身高cm
-            'weight'   => (int)$this->filter($this->data['weight'], 'int!'),  // 身高kg
+            'weight'   => (int)$this->filter($this->data['weight'], 'int!'),  // 体重kg
             'purpose'  => (int)$this->filter($this->data['purpose'], 'int!'), // 意向[1:求撩 2:谈恋爱 3:交朋友 4:随缘 5:勿扰]
             'relation' => (int)$this->filter($this->data['relation'], 'int!'),// 情感[1:单身 2:恋爱中 3:已婚 4:离异/丧偶]
             'sexual'   => (int)$this->filter($this->data['sexual'], 'int!'),  // 取向[1:喜欢男 2:喜欢女 3:双性恋 4:无性恋]

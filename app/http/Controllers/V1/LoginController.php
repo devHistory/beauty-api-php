@@ -21,10 +21,9 @@ class LoginController extends ControllerBase
     private $timeout = 86400 * 14;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        $this->checkSid();
-        $this->prepareData();
+        $this->data = $this->dispatcher->getParam('_data');
         $this->accountModel = new Accounts();
     }
 
@@ -100,11 +99,13 @@ class LoginController extends ControllerBase
         }
 
 
+        $this->setSession($account['_id']);
+
+
         // output
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -194,11 +195,13 @@ class LoginController extends ControllerBase
         }
 
 
+        $this->setSession($account['_id']);
+
+
         // output
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -241,11 +244,13 @@ class LoginController extends ControllerBase
         }
 
 
+        $this->setSession($account['_id']);
+
+
         // output
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -309,11 +314,13 @@ class LoginController extends ControllerBase
         }
 
 
+        $this->setSession($account['_id']);
+
+
         // output
         $payload = [
             'uid'     => $account['_id'],
             'account' => $account['account'],
-            'token'   => $this->support->createToken(['uid' => $account['_id']], $this->timeout)
         ];
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -334,6 +341,17 @@ class LoginController extends ControllerBase
             return 'blocked ' . Carbon::now()->timestamp($account['blocked'])->diffForHumans();
         }
         return false;
+    }
+
+
+    /**
+     * set uuid into session
+     * @param $uid
+     */
+    private function setSession($uid)
+    {
+        $k = '_sid|' . $this->request->getHeader('Xt-Sid');
+        $this->cache->hSet($k, 'uid', $uid);
     }
 
 }

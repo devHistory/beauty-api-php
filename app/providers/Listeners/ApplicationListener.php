@@ -27,30 +27,23 @@ class ApplicationListener
     use AesTrait;
 
 
-    public function boot(Event $event, Application $app)
-    {
-        // check time
-        $timestamp = $app->request->getHeader('Xt-Time');
-        if (!$timestamp || abs(time() - $timestamp) > 300) {
-            $output = [
-                'code'    => 408,
-                'message' => 'failed, timeout'
-            ];
-            $app->response->setJsonContent($output)->send();
-            exit();
-        }
-    }
-
     public function beforeSendResponse(Event $event, Application $app)
     {
-        $secretKey = $app->cache->get('_sid|' . $app->request->getHeader('Xt-Sid'));
-        if (!$secretKey) {
+        $mode = $app->request->getHeader('Xt-Mode');
+        $aesKey = $app->cache->hGet('_sid|' . $app->request->getHeader('Xt-Sid'), 'aes');
+        if (!$aesKey) {
             return true;
         }
+
         $payload = $app->response->getContent();
-        $data = $this->encrypt($secretKey, $payload);
+        $data = $this->encrypt($aesKey, $payload);
         $app->response->setHeader('Xt-Iv', base64_encode($data['0']));
-        $app->response->setContent(base64_encode($data['1']));
+        if ($mode == 'base64') {
+            $app->response->setContent(base64_encode($data['1']));
+        }
+        else {
+            $app->response->setContent($data['1']);
+        }
     }
 
 }

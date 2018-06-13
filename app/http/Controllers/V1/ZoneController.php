@@ -4,17 +4,17 @@ namespace App\Http\Controllers\V1;
 
 
 use App\Http\Models\Location;
-use App\Providers\Components\FilterTrait;
+use App\Providers\Components\UtilsTrait;
 
 class ZoneController extends ControllerBase
 {
 
-    use FilterTrait;
+    use UtilsTrait;
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
     }
 
 

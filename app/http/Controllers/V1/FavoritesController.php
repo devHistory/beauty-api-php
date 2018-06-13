@@ -4,12 +4,12 @@ namespace App\Http\Controllers\V1;
 
 
 use App\Http\Models\Favorites;
-use App\Providers\Components\FilterTrait;
+use App\Providers\Components\UtilsTrait;
 
 class FavoritesController extends ControllerBase
 {
 
-    use FilterTrait;
+    use UtilsTrait;
 
 
     private $favoritesModel;
@@ -18,9 +18,9 @@ class FavoritesController extends ControllerBase
     private $allowType = ['post'];
 
 
-    public function beforeExecuteRoute()
+    public function initialize()
     {
-        parent::beforeExecuteRoute();
+        parent::initialize();
         $this->favoritesModel = new Favorites();
     }
 

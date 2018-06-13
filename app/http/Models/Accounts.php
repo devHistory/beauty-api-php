@@ -27,7 +27,7 @@ class Accounts extends Model
     public function addAccount($account = '', $password = '', $options = [])
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         $id = new ObjectId();
         if ($this->getAccount($account)) {
             return false;
@@ -58,7 +58,7 @@ class Accounts extends Model
     public function getAccountById($id = '')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         if (!($result = $mongodb->$db->accounts->findOne(['_id' => $id]))) {
             return false;
         }
@@ -69,7 +69,7 @@ class Accounts extends Model
     public function getAccount($account = '')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         if (!($result = $mongodb->$db->ids->findOne(['_id' => $account]))) {
             return false;
         }
@@ -98,7 +98,7 @@ class Accounts extends Model
     public function setAttribute($uid = '', $data = [])
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
         $mongodb->$db->accounts->updateOne(
             ['_id' => $uid],
             ['$set' => $data + ['mTime' => time()]]
@@ -113,7 +113,7 @@ class Accounts extends Model
             return false;
         }
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']['database']['mongodb']['database'];
+        $db = config('database.mongodb.db');
 
         // find account
         if (!$account = $mongodb->$db->accounts->findOne(['_id' => $uid])) {

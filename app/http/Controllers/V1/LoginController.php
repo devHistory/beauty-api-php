@@ -279,7 +279,7 @@ class LoginController extends ControllerBase
                 'message' => 'invalid argv token'
             ]);
         }
-        if (empty($this->di['config']['oauth'][$type])) {
+        if (empty(config('oauth.' . $type))) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'invalid argv platform'
@@ -289,7 +289,7 @@ class LoginController extends ControllerBase
 
         // verify
         try {
-            $oauth = new OauthAdaptor($type, (array)$this->di['config']['oauth'][$type]);
+            $oauth = new OauthAdaptor($type, (array)config('oauth.' . $type));
             $response = $oauth->verify($this->data['id'], $this->data['token']);
         } catch (Exception $e) {
             return $this->response->setJsonContent([

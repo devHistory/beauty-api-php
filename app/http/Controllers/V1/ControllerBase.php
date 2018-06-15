@@ -5,6 +5,7 @@ namespace App\Http\Controllers\V1;
 
 
 use App\Providers\Components\UtilsTrait;
+use App\Providers\Exception\RequestException;
 use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller
@@ -25,7 +26,7 @@ class ControllerBase extends Controller
         $this->uid = $this->dispatcher->getParam('_uid');
 
         if (!$this->uid) {
-            exit(json_encode(['code' => 400, 'message' => 'account is not login']));
+            throw new RequestException('account is not login', 400);
         }
     }
 

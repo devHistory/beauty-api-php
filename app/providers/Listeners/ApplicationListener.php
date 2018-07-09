@@ -30,6 +30,9 @@ class ApplicationListener
     public function beforeSendResponse(Event $event, Application $app)
     {
         $mode = $app->request->getHeader('Xt-Mode');
+        if ($mode == 'plaintext') {
+            return true;
+        }
         $aesKey = $app->cache->hGet('_sid|' . $app->request->getHeader('Xt-Sid'), 'aes');
         if (!$aesKey) {
             return true;

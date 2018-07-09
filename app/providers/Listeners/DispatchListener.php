@@ -57,15 +57,28 @@ class DispatchListener
 
         $this->checkSign();
 
-        $this->decryptData($dispatcher);
+        $di = DI::getDefault();
+        $mode = $di['request']->getHeader('Xt-Mode');
+        if ($mode == 'plaintext') {
+            $data = $this->getPlaintext();
+        }
+        else {
+            $data = $this->getDecryptData();
+        }
+        $dispatcher->setParam('_data', $data);
+
+        if (isset($this->getSession()['uid'])) {
+            $dispatcher->setParam('_uid', $this->getSession()['uid']);
+        }
+        unset($data);
     }
 
 
     private function checkTimeout()
     {
         $time = DI::getDefault()['request']->getHeader('Xt-Time');
-        if (abs($time - time()) > 300) {
-            throw new  RequestException('request timeout: Xt-Time', 400);
+        if (!$time || abs($time - time()) > 300) {
+            throw new  RequestException('request header argv: Xt-Time', 400);
         }
     }
 
@@ -93,7 +106,7 @@ class DispatchListener
     }
 
 
-    private function decryptData(Dispatcher $dispatcher)
+    private function getDecryptData()
     {
         $di = DI::getDefault();
         $mode = $di['request']->getHeader('Xt-Mode');
@@ -114,14 +127,19 @@ class DispatchListener
                 $decrypt = $this->decrypt($this->getSession()['aes'], $iv, $di['request']->getRawBody());
             }
             parse_str($decrypt, $data);
-            $dispatcher->setParam('_data', $data);
-            if (isset($this->getSession()['uid'])) {
-                $dispatcher->setParam('_uid', $this->getSession()['uid']);
-            }
+            return $data;
         } catch (RequestException $e) {
             throw new  RequestException('decrypt failed', 417);
         }
-        unset($data, $decrypt);
+    }
+
+
+    private function getPlaintext()
+    {
+        $di = DI::getDefault();
+        $body = $di['request']->getRawBody();
+        parse_str($body, $data);
+        return $data;
     }
 
 

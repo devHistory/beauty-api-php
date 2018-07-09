@@ -98,7 +98,10 @@ class DispatchListener
                 $headerString .= '&' . $key . '=' . $value;
             }
         }
-        $signString = $uri . "\n" . ltrim($headerString, '&') . "\n" . md5($body);
+        $signString = $uri . "\n" . ltrim($headerString, '&');
+        if ($body) {
+            $signString .= "\n" . md5($body);
+        }
         $session = $this->getSession();
         if ($sign != hash_hmac('sha1', $signString, $session['aes'])) {
             throw new  RequestException('request sign error', 400);

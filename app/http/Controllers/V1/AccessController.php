@@ -17,6 +17,7 @@ class AccessController extends Controller
     public function sessionAction()
     {
         // get data
+        $mode = $this->request->getHeader('Xt-Mode');
         $raw = $this->request->getRawBody();
         if (!$raw) {
             return $this->response->setJsonContent([
@@ -25,22 +26,26 @@ class AccessController extends Controller
             ]);
         }
 
-        // decrypt
-        $rsa = Rsa::factory([
-            'private_key' => CONFIG_DIR . '/rsa.pem',
-        ]);
-        try {
-            // Rsa::MODE_AUTO 模式自动处理base64
-            $decrypt = $rsa->decrypt($raw);
-        } catch (Exception $e) {
-            return $this->response->setJsonContent([
-                'code'    => 406,
-                'message' => 'failed, can not decrypt',
+        if ($mode == 'plaintext') {
+            $keyData = $raw;
+        }
+        else {
+            $rsa = Rsa::factory([
+                'private_key' => CONFIG_DIR . '/rsa.pem',
             ]);
+            try {
+                // Rsa::MODE_AUTO 模式自动处理base64
+                $keyData = $rsa->decrypt($raw);
+            } catch (Exception $e) {
+                return $this->response->setJsonContent([
+                    'code'    => 406,
+                    'message' => 'failed, can not decrypt',
+                ]);
+            }
         }
 
         // check AES key
-        if (strlen($decrypt) < 8 || strlen($decrypt) > 64) {
+        if (strlen($keyData) < 8 || strlen($keyData) > 64) {
             return $this->response->setJsonContent([
                 'code'    => 406,
                 'message' => 'failed, error key length',
@@ -52,7 +57,7 @@ class AccessController extends Controller
         $charList = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $sid = Rand::getString(32, $charList);
         $k = '_sid|' . $sid;
-        $this->cache->hSet($k, 'aes', $decrypt);
+        $this->cache->hSet($k, 'aes', $keyData);
         $this->cache->expire($k, $timeout);
         $output = [
             'code'    => 200,

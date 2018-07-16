@@ -12,10 +12,7 @@ use Phalcon\DI\FactoryDefault,
     Phalcon\Cache\Frontend\Data as FrontData,
     Phalcon\Cache\Backend\File as FileCache,
     Phalcon\Cache\Backend\Redis as RedisCache,
-    App\Providers\Components\Locale,
-    App\Providers\Components\Rpc,
-    App\Providers\Components\Utils,
-    App\Providers\Components\Support,
+    App\Providers,
     Symfony\Component\Yaml\Yaml as SymfonyYaml,
     MongoDB\Client as MongoDBClient;
 
@@ -42,22 +39,22 @@ $di->set('config', function () {
 
 
 $di->set('locale', function () {
-    return new Locale();
+    return new Providers\Components\Locale();
 }, true);
 
 
 $di->set('rpc', function () {
-    return new Rpc();
+    return new Providers\Components\Rpc();
 }, true);
 
 
 $di->set('utils', function () {
-    return new Utils();
+    return new Providers\Components\Utils();
 }, true);
 
 
 $di->set('support', function () {
-    return new Support();
+    return new Providers\Components\Support();
 }, true);
 
 

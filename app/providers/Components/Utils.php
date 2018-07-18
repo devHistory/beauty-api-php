@@ -60,7 +60,7 @@ class Utils extends Component
                 $uidList[] = $u;
             }
 
-            $db = $this->config['database']['mongodb']['database'];
+            $db = config('database.mongodb.db');
             $accounts = $this->mongodb->$db->accounts->find(
                 ['_id' => ['$in' => $uidList]],
                 ['projection' => $projection]

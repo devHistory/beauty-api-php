@@ -5,9 +5,8 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Models\Accounts;
 use App\Http\Models\Relation;
-use Exception;
 
-class RelationController extends ControllerBase
+class FriendsController extends ControllerBase
 {
 
     private $relationModel;
@@ -24,6 +23,7 @@ class RelationController extends ControllerBase
     }
 
 
+    // 添加好友
     public function storeAction()
     {
         if (empty($this->data['uid'])) {
@@ -45,7 +45,9 @@ class RelationController extends ControllerBase
             ]);
         }
 
-        $this->relationModel->addFollow($this->data['uid'], $this->uid);
+        $this->relationModel->addFriends($this->data['uid'], $this->uid);
+
+        // TODO :: 推送消息给对方
 
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -54,16 +56,17 @@ class RelationController extends ControllerBase
     }
 
 
+    // 删除好友
     public function destroyAction($uid)
     {
-        if ($uid == $this->uid) {
+        if (empty($uid)) {
             return $this->response->setJsonContent([
                 'code'    => 400,
-                'message' => 'invalid argv uid'
+                'message' => 'missing argv uid'
             ]);
         }
 
-        $this->relationModel->delFollow($uid, $this->uid);
+        $this->relationModel->delFriends($uid, $this->uid);
 
         return $this->response->setJsonContent([
             'code'    => 200,
@@ -72,19 +75,10 @@ class RelationController extends ControllerBase
     }
 
 
+    // 好友列表
     public function indexAction()
     {
-        $type = $this->request->get('type');
-        switch ($type) {
-            case 'followers':
-                $data = $this->relationModel->listFollowers($this->uid);
-                break;
-            case 'following':
-                $data = $this->relationModel->listFollowing($this->uid);
-                break;
-            default:
-                throw new Exception('invalid argv type');
-        }
+        $data = $this->relationModel->getFriends($this->uid);
         return $this->response->setJsonContent([
             'code'    => 200,
             'message' => 'success',
@@ -94,5 +88,4 @@ class RelationController extends ControllerBase
             ]
         ]);
     }
-
 }

@@ -29,17 +29,13 @@ $router->add('/login/device', ['controller' => 'V1\Login', 'action' => 'device']
 $router->add('/login', ['controller' => 'V1\Login', 'action' => 'login']);
 $router->add('/register', ['controller' => 'V1\Login', 'action' => 'register']);
 
-// relation
-$relation = new Group(['controller' => 'V1\Relation']);
-$relation->setPrefix('/relation');
-$relation->addGet('/friends', ['action' => 'getFriends']);
-$relation->addPost('/friends', ['action' => 'addFriends']);
-$relation->addDelete('/friends', ['action' => 'delFriends']);
-$relation->addPost('/follow', ['action' => 'addFollow']);
-$relation->addDelete('/follow', ['action' => 'delFollow']);
-$relation->addGet('/following', ['action' => 'following']);
-$relation->addGet('/followers', ['action' => 'followers']);
-$router->mount($relation);
+/**
+ * Resources
+ * Allow Action: 'index', 'store', 'show', 'update', 'destroy'
+ */
+$resource = new Providers\System\Route($router);
+$resource->addResource('/friends', 'V1\Friends', '{id:[a-f0-9]{24}}')->only('index', 'store', 'destroy');
+$resource->addResource('/relation', 'V1\Relation', '{id:[a-f0-9]{24}}')->only('index', 'store', 'destroy');
 
 $router->addGet('/posts/([a-f0-9]{24})', ['controller' => 'V1\Posts', 'action' => 'get', 'postId' => 1]);
 $router->addPost('/posts', ['controller' => 'V1\Posts', 'action' => 'add']);

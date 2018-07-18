@@ -15,7 +15,7 @@ class FavoritesController extends ControllerBase
     private $favoritesModel;
 
 
-    private $allowType = ['post'];
+    private $allowType = ['posts'];
 
 
     public function initialize()
@@ -26,16 +26,15 @@ class FavoritesController extends ControllerBase
 
 
     // 列表 type
-    public function getAction()
+    public function indexAction()
     {
-        $type = $this->filter($this->data['type'], 'alphanum', 'post');
-
+        $type = $this->request->get('type');
         if (!in_array($type, $this->allowType)) {
             return $this->response->setJsonContent(['code' => 400, 'message' => 'error argv']);
         }
 
-        $data = $this->favoritesModel->get($this->uid, $type);
-        if (!$data) {
+        $data = $this->favoritesModel->getList($this->uid, $type);
+        if (!count($data)) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'no data'
@@ -55,10 +54,11 @@ class FavoritesController extends ControllerBase
 
 
     // 收藏 id, type
-    public function addAction()
+    public function storeAction()
     {
         $id = $this->filter($this->data['id'], 'alphanum', null);
-        $type = $this->filter($this->data['type'], 'alphanum', 'post');
+        $type = $this->filter($this->data['type'], 'alphanum', 'posts');
+
 
         // check
         if (!$id || !$type || !in_array($type, $this->allowType)) {
@@ -78,11 +78,15 @@ class FavoritesController extends ControllerBase
     }
 
 
-    // 删除 id, type
-    public function delAction()
+    /**
+     * 删除 id, type
+     * TODO :: type参数位置 uri or body
+     * @param $id
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
+    public function destroyAction($id)
     {
-        $id = $this->dispatcher->getParam('id');
-        $type = $this->filter($this->data['type'], 'alphanum', 'post');
+        $type = $this->filter($this->data['type'], 'alphanum', 'posts');
 
         // check
         if (!$id || !$type || !in_array($type, $this->allowType)) {

@@ -8,13 +8,13 @@ use Phalcon\Mvc\Model;
 class Favorites extends Model
 {
 
-    public function add($uid = '', $id = '', $type = 'post')
+    public function add($uid = '', $id = '', $type = 'posts')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
 
         $data = null;
-        if ($type == 'post') {
+        if ($type == 'posts') {
             $data = $mongodb->$db->posts->findOne(
                 ['_id' => $id],
                 [
@@ -46,10 +46,10 @@ class Favorites extends Model
     }
 
 
-    public function del($uid = '', $id = '', $type = 'post')
+    public function del($uid = '', $id = '', $type = 'posts')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
 
         return $mongodb->$db->favorites->updateOne(
             ['_id' => $uid],
@@ -61,10 +61,10 @@ class Favorites extends Model
     }
 
 
-    public function get($uid = '', $type = '')
+    public function getList($uid = '', $type = '')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
 
         $data = $mongodb->$db->favorites->findOne(
             ['_id' => $uid],

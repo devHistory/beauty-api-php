@@ -22,11 +22,8 @@ class CommentsController extends ControllerBase
     }
 
 
-    /**
-     * 添加评论
-     * pid, content
-     */
-    public function addAction()
+    // 添加评论 pid, content
+    public function storeAction()
     {
         $postId = $this->filter($this->data['pid'], 'alphanum', '');
         $content = $this->filter($this->data['content'], 'string', '');
@@ -52,20 +49,10 @@ class CommentsController extends ControllerBase
     }
 
 
-    /**
-     * 删除评论
-     */
-    public function delAction()
+    // 删除评论
+    public function destroyAction($id)
     {
-        $commentId = $this->dispatcher->getParam('commentId');
-        if (!$commentId) {
-            return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'missing argv: commentId'
-            ]);
-        }
-
-        if (!$this->postModel->delComment($this->uid, $commentId)) {
+        if (!$this->postModel->delComment($this->uid, $id)) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'failed'

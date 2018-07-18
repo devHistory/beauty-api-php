@@ -34,17 +34,13 @@ $router->add('/register', ['controller' => 'V1\Login', 'action' => 'register']);
  * Allow Action: 'index', 'store', 'show', 'update', 'destroy'
  */
 $resource = new Providers\System\Route($router);
-$resource->addResource('/friends', 'V1\Friends', '{id:[a-f0-9]{24}}')->only('index', 'store', 'destroy');
-$resource->addResource('/relation', 'V1\Relation', '{id:[a-f0-9]{24}}')->only('index', 'store', 'destroy');
+$resource->setIdFormat('{id:[a-f0-9]{24}}');
+$resource->addResource('/friends', 'V1\Friends')->only('index', 'store', 'destroy');
+$resource->addResource('/relation', 'V1\Relation')->only('index', 'store', 'destroy');
+$resource->addResource('/posts', 'V1\Posts')->only('show', 'store', 'destroy');
+$resource->addResource('/comments', 'V1\Comments')->only('store', 'destroy');
+$resource->addResource('/favorites', 'V1\Favorites')->only('index', 'store', 'destroy');
 
-$router->addGet('/posts/([a-f0-9]{24})', ['controller' => 'V1\Posts', 'action' => 'get', 'postId' => 1]);
-$router->addPost('/posts', ['controller' => 'V1\Posts', 'action' => 'add']);
-$router->addDelete('/posts/([a-f0-9]{24})', ['controller' => 'V1\Posts', 'action' => 'del', 'postId' => 1]);
-$router->addPost('/comments', ['controller' => 'V1\Comments', 'action' => 'add']);
-$router->addDelete('/comments/([a-f0-9]{24})', ['controller' => 'V1\Comments', 'action' => 'del', 'commentId' => 1]);
-$router->addGet('/favorites', ['controller' => 'V1\Favorites', 'action' => 'get']);
-$router->addPost('/favorites', ['controller' => 'V1\Favorites', 'action' => 'add']);
-$router->addDelete('/favorites/([a-f0-9]{24})', ['controller' => 'V1\Favorites', 'action' => 'del', 'id' => 1]);
 $router->addPost('/report', ['controller' => 'V1\Report', 'action' => 'report']);
 $router->addPost('/report/feedback', ['controller' => 'V1\Report', 'action' => 'feedback']);
 $router->addPost('/setting/name', ['controller' => 'V1\Setting', 'action' => 'name']);

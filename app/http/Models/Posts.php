@@ -14,7 +14,7 @@ class Posts extends Model
     public function exists($id = '')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
         if ($mongodb->$db->posts->findOne(['_id' => $id], ['projection' => ['_id' => 1]])) {
             return true;
         }
@@ -26,7 +26,7 @@ class Posts extends Model
     public function get($postId = '', $attr = [])
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
         if ($attr) {
             $projection = [];
             if (is_array($attr)) {
@@ -49,7 +49,7 @@ class Posts extends Model
 
         // insert into database
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
         $id = new ObjectId();
         try {
             $postData = [
@@ -85,11 +85,11 @@ class Posts extends Model
         }
 
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
 
         // 删评论 :: 主题删除后相关评论被删除
-        if (isset($post->comment)) {
-            foreach ($post->comment as $comment) {
+        if (isset($post->comments)) {
+            foreach ($post->comments as $comment) {
                 $mongodb->$db->comments->deleteOne(['_id' => $comment->cid]);
             }
         }
@@ -114,7 +114,7 @@ class Posts extends Model
         }
 
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
         $oid = new ObjectId();
         $timestamp = time();
 
@@ -123,7 +123,7 @@ class Posts extends Model
             [
                 '$inc'  => ['commentNum' => 1],
                 '$push' => [
-                    'comment' => [
+                    'comments' => [
                         'cid'     => $oid->__toString(),
                         'uid'     => $uid,
                         'content' => $content,
@@ -148,7 +148,7 @@ class Posts extends Model
     public function delComment($uid = '', $commentId = '')
     {
         $mongodb = $this->di['mongodb'];
-        $db = $this->di['config']->database->mongodb->database;
+        $db = config('database.mongodb.db');
 
         // find comment
         $comment = $mongodb->$db->comments->findOne(
@@ -169,7 +169,7 @@ class Posts extends Model
             ['_id' => $comment->pid],
             [
                 '$inc'  => ['commentNum' => -1],
-                '$pull' => ['comment' => ['cid' => $commentId]]
+                '$pull' => ['comments' => ['cid' => $commentId]]
             ]
         );
 

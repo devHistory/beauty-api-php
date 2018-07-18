@@ -23,15 +23,8 @@ class PostsController extends ControllerBase
 
 
     // 获取 TODO :: 评论数量限制&预览
-    public function getAction()
+    public function showAction($postId)
     {
-        $postId = $this->dispatcher->getParam('postId');
-        if (!$postId) {
-            return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'missing argv postId'
-            ]);
-        }
         if (!$posts = $this->postsModel->get($postId)) {
             return $this->response->setJsonContent([
                 'code'    => 400,
@@ -62,15 +55,15 @@ class PostsController extends ControllerBase
             $data['avatar'] = '';
         }
         // 评论列表
-        if (isset($data['comment'])) {
-            $data['comment'] = $this->utils->fillUserByKey(
-                $data['comment'], 'uid', ['name', 'gender', 'level', 'avatar']
+        if (isset($data['comments'])) {
+            $data['comments'] = $this->utils->fillUserByKey(
+                $data['comments'], 'uid', ['name', 'gender', 'level', 'avatar']
             );
         }
         // 查看列表
-        if (isset($data['viewer'])) {
-            $data['viewer'] = $this->utils->fillUserbyCache(
-                $data['viewer'], ['name', 'gender', 'level', 'avatar']
+        if (isset($data['viewers'])) {
+            $data['viewers'] = $this->utils->fillUserbyCache(
+                $data['viewers'], ['name', 'gender', 'level', 'avatar']
             );
         }
 
@@ -83,7 +76,7 @@ class PostsController extends ControllerBase
 
 
     // 创建
-    public function addAction()
+    public function storeAction()
     {
         $type = $this->filter($this->data['type'], 'alphanum', 'text');
         $content = $this->filter($this->data['content'], 'string', '');
@@ -135,17 +128,9 @@ class PostsController extends ControllerBase
 
 
     // 删除
-    public function delAction()
+    public function destroyAction($id)
     {
-        $postId = $this->dispatcher->getParam('postId');
-        if (!$postId) {
-            return $this->response->setJsonContent([
-                'code'    => 400,
-                'message' => 'missing argv postId'
-            ]);
-        }
-
-        if (!$this->postsModel->del($this->uid, $postId)) {
+        if (!$this->postsModel->del($this->uid, $id)) {
             return $this->response->setJsonContent([
                 'code'    => 400,
                 'message' => 'failed'

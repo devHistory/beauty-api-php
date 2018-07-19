@@ -41,11 +41,10 @@ $resource->addResource('/posts', 'V1\Posts')->only('show', 'store', 'destroy');
 $resource->addResource('/comments', 'V1\Comments')->only('store', 'destroy');
 $resource->addResource('/favorites', 'V1\Favorites')->only('index', 'store', 'destroy');
 
+$router->addGet('/profile', ['controller' => 'V1\Profile', 'action' => 'show']);
+$router->addPut('/profile', ['controller' => 'V1\Profile', 'action' => 'update']);
 $router->addPost('/report', ['controller' => 'V1\Report', 'action' => 'report']);
 $router->addPost('/report/feedback', ['controller' => 'V1\Report', 'action' => 'feedback']);
-$router->addPost('/setting/name', ['controller' => 'V1\Setting', 'action' => 'name']);
-$router->addPost('/setting/password', ['controller' => 'V1\Setting', 'action' => 'password']);
-$router->addPost('/setting/attribute', ['controller' => 'V1\Setting', 'action' => 'attribute']);
 $router->addPost('/files/access', ['controller' => 'V1\Files', 'action' => 'access']);
 $router->addPost('/zone/nearby', ['controller' => 'V1\Zone', 'action' => 'nearby']);
 

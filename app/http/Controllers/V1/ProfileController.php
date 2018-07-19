@@ -7,7 +7,7 @@ use App\Http\Models\Accounts;
 use App\Providers\Components\UtilsTrait;
 use Zend\Validator\Regex;
 
-class SettingController extends ControllerBase
+class ProfileController extends ControllerBase
 {
 
     use UtilsTrait;
@@ -23,17 +23,48 @@ class SettingController extends ControllerBase
     }
 
 
+    public function showAction()
+    {
+        $data = $this->accountModel->getAccountById($this->uid);
+        $data['uid'] = $data['_id'];
+        unset($data['_id'], $data['password']);
+        return $this->response->setJsonContent([
+            'code'    => 200,
+            'message' => 'success',
+            'payload' => $data
+        ]);
+    }
+
+
+    public function updateAction()
+    {
+        $do = $this->request->get('do');
+        switch ($do) {
+            case 'name':
+                return $this->setName();
+                break;
+            case 'password':
+                return $this->setPassword();
+                break;
+            case 'attribute':
+                return $this->setAttribute();
+            default :
+                throw new \Exception('invalid method');
+        }
+    }
+
+
     /**
      * name
      */
-    public function nameAction()
+    private function setName()
     {
         $name = $this->filter($this->data['name'], 'string');
         if (!$name) {
             return $this->response->setJsonContent(['code' => 400, 'message' => 'missing argv: name']);
         }
         if (strlen($name) < 3 || strlen($name) > 30) {
-            return $this->response->setJsonContent(['code' => 400, 'message' => 'length error']);
+            return $this->response->setJsonContent(['code' => 400, 'message' => 'name: invalid length']);
         }
 
         if (!$this->accountModel->setName($this->uid, $name)) {
@@ -47,7 +78,7 @@ class SettingController extends ControllerBase
      * old
      * pass
      */
-    public function passwordAction()
+    private function setPassword()
     {
         $oldPass = $this->filter($this->data['old'], 'string');
         $newPass = $this->filter($this->data['pass'], 'string');
@@ -95,7 +126,7 @@ class SettingController extends ControllerBase
     /**
      * set attribute
      */
-    public function attributeAction()
+    private function setAttribute()
     {
         $data = [
             'birthday' => $this->filter($this->data['birthday'], 'int'),      // 出生19871104
@@ -128,14 +159,6 @@ class SettingController extends ControllerBase
         }
 
         return $this->response->setJsonContent(['code' => 200, 'message' => 'success']);
-    }
-
-
-    /**
-     * system setting
-     */
-    public function systemAction()
-    {
     }
 
 }

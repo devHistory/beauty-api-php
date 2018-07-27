@@ -49,7 +49,8 @@ class DispatchListener
 
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        if ($dispatcher->getControllerName() == 'V1\Access') {
+        $ignore = ['V1\Access', 'default'];
+        if (in_array($dispatcher->getControllerName(), $ignore)) {
             return true;
         }
 
